@@ -1,323 +1,871 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Connessione Stabilita...</title>
-    
-    <style>
-        /* Variabili Colori CaskLogic */
-        :root {
-            --cask-dark: #16355A;
-            --cask-teal: #408A9A;
-            --cask-white: #FFFFFF;
-            --hacker-green: #0f0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>CaskLogic – Piero Borgatta</title>
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #000;
-            overflow-x: hidden;
-        }
+  <!-- NO INDEXING -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="googlebot" content="noindex, nofollow" />
 
-        /* --- FASE 1: TERMINALE VIRUS --- */
-        #terminal {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            color: var(--hacker-green);
-            font-family: 'Courier New', Courier, monospace;
-            padding: 20px;
-            box-sizing: border-box;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            font-size: 14px;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Syne:wght@400;700&display=swap" rel="stylesheet" />
 
-        .log-line {
-            margin: 2px 0;
-            word-wrap: break-word;
-        }
+  <style>
+    :root {
+      --navy: #16355A;
+      --teal: #408A9A;
+      --teal-light: #5bbece;
+      --white: #ffffff;
+      --red: #ff2020;
+      --green: #00ff41;
+      --bg: #010a14;
+    }
 
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 15px;
-            background-color: var(--hacker-green);
-            animation: blink 1s step-end infinite;
-        }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--green);
+      font-family: 'Share Tech Mono', monospace;
+      overflow-x: hidden;
+    }
 
-        /* Effetto Glitch/Flash di transizione */
-        .flash {
-            animation: flashBang 0.5s ease-out forwards;
-        }
+    /* ─── SCANLINES ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.25) 3px,
+        rgba(0,0,0,0.25) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+      animation: scanMove 8s linear infinite;
+    }
 
-        @keyframes flashBang {
-            0% { background-color: #fff; opacity: 1; z-index: 9999; }
-            100% { background-color: transparent; opacity: 0; z-index: -1; display: none; }
-        }
+    @keyframes scanMove {
+      0%   { background-position: 0 0; }
+      100% { background-position: 0 100vh; }
+    }
 
-        /* --- FASE 2: BIGLIETTO DA VISITA CASKLOGIC --- */
-        #business-card {
-            display: none;
-            background-color: #f4f7f6;
-            min-height: 100vh;
-            opacity: 0;
-            transition: opacity 1s ease-in;
-        }
+    /* ─── NOISE OVERLAY ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.5;
+    }
 
-        .header {
-            background-color: var(--cask-dark);
-            color: var(--cask-white);
-            padding: 40px 20px;
-            text-align: center;
-            border-bottom: 5px solid var(--cask-teal);
-        }
+    /* ─── PHASE: BOOT ─── */
+    #phase-boot {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      padding: 24px;
+      z-index: 100;
+      background: var(--bg);
+      transition: opacity 0.5s;
+    }
 
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            letter-spacing: 1px;
-        }
+    #phase-boot.hidden { opacity: 0; pointer-events: none; }
 
-        .header h2 {
-            margin: 10px 0 0;
-            font-size: 16px;
-            color: var(--cask-teal);
-            font-weight: normal;
-            text-transform: uppercase;
-        }
+    .terminal-line {
+      font-size: clamp(11px, 3vw, 14px);
+      line-height: 1.8;
+      opacity: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 100%;
+    }
 
-        .content {
-            padding: 30px 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+    .terminal-line.typed { animation: typeIn 0s forwards; opacity: 1; }
+    .terminal-line.red { color: var(--red); }
+    .terminal-line.teal { color: var(--teal-light); }
+    .terminal-line.white { color: white; }
+    .terminal-line.blink { animation: blinker 0.5s step-end infinite; }
 
-        .section-title {
-            color: var(--cask-dark);
-            font-size: 20px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid var(--cask-teal);
-            display: inline-block;
-            padding-bottom: 5px;
-        }
+    @keyframes typeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes blinker { 50% { opacity: 0; } }
 
-        .skills-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+    #cursor {
+      display: inline-block;
+      width: 10px; height: 14px;
+      background: var(--green);
+      animation: blinker 0.6s step-end infinite;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
 
-        .skill-item {
-            background: var(--cask-white);
-            padding: 15px;
-            border-left: 4px solid var(--cask-teal);
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            font-size: 15px;
-            color: #333;
-        }
+    /* ─── GLITCH SKULL ─── */
+    #phase-skull {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background: var(--bg);
+      z-index: 99;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
 
-        .skill-item strong {
-            color: var(--cask-dark);
-            display: block;
-            margin-bottom: 5px;
-        }
+    #phase-skull.visible { opacity: 1; pointer-events: all; }
 
-        .contact-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 30px;
-        }
+    .skull-ascii {
+      font-size: clamp(7px, 2.5vw, 13px);
+      line-height: 1.2;
+      color: var(--red);
+      text-shadow: 0 0 8px var(--red), 0 0 30px rgba(255,32,32,0.4);
+      animation: glitchText 0.2s infinite alternate;
+      white-space: pre;
+    }
 
-        .btn {
-            display: block;
-            text-align: center;
-            padding: 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+    .skull-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(18px, 6vw, 42px);
+      color: var(--red);
+      text-transform: uppercase;
+      text-shadow: 0 0 20px var(--red), 2px 2px 0 #ff000050;
+      margin-top: 16px;
+      animation: glitchText 0.15s infinite alternate;
+    }
 
-        .btn:active {
-            transform: scale(0.98);
-        }
+    .skull-sub {
+      font-size: clamp(10px, 3vw, 14px);
+      color: var(--teal-light);
+      margin-top: 8px;
+      letter-spacing: 4px;
+      animation: blinker 0.8s step-end infinite;
+    }
 
-        .btn-primary {
-            background-color: var(--cask-teal);
-            color: var(--cask-white);
-        }
+    @keyframes glitchText {
+      0%  { transform: translate(0,0) skewX(0deg); filter: none; }
+      20% { transform: translate(-2px, 1px) skewX(-1deg); filter: hue-rotate(90deg); }
+      40% { transform: translate(2px, -1px) skewX(2deg); }
+      60% { transform: translate(-1px, 2px) skewX(-2deg); filter: hue-rotate(180deg); }
+      80% { transform: translate(1px, 0px) skewX(1deg); }
+      100%{ transform: translate(0,0) skewX(0deg); filter: none; }
+    }
 
-        .btn-secondary {
-            background-color: var(--cask-dark);
-            color: var(--cask-white);
-        }
+    /* ─── PHASE: CARD ─── */
+    #phase-card {
+      position: relative;
+      min-height: 100vh;
+      background: var(--bg);
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s, transform 0.8s;
+      padding-bottom: 60px;
+    }
 
-        .joke-note {
-            text-align: center;
-            font-size: 12px;
-            color: #888;
-            margin-top: 40px;
-            font-style: italic;
-        }
-    </style>
+    #phase-card.visible { opacity: 1; transform: translateY(0); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, #0a1f38 0%, #011222 60%, #010a14 100%);
+      padding: 48px 24px 36px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(64,138,154,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(22,53,90,0.4) 0%, transparent 50%);
+    }
+
+    .circuit-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(64,138,154,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(64,138,154,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .logo-wrap { position: relative; z-index: 2; margin-bottom: 20px; }
+
+    .logo-svg {
+      width: clamp(80px, 22vw, 120px);
+      height: auto;
+      filter: drop-shadow(0 0 16px rgba(64,138,154,0.6));
+      animation: logoPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { filter: drop-shadow(0 0 16px rgba(64,138,154,0.6)); }
+      50%       { filter: drop-shadow(0 0 32px rgba(64,138,154,1)); }
+    }
+
+    .hero-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(22px, 7vw, 48px);
+      font-weight: 900;
+      color: white;
+      position: relative; z-index: 2;
+      letter-spacing: 2px;
+      text-shadow: 0 0 30px rgba(64,138,154,0.5);
+    }
+
+    .hero-name span { color: var(--teal); }
+
+    .hero-role {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(11px, 3.5vw, 16px);
+      color: var(--teal-light);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 6px;
+      position: relative; z-index: 2;
+    }
+
+    .hero-divider {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      margin: 16px auto;
+    }
+
+    /* GLITCH BADGE */
+    .glitch-badge {
+      display: inline-block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(9px, 2.5vw, 11px);
+      color: var(--green);
+      background: rgba(0,255,65,0.07);
+      border: 1px solid rgba(0,255,65,0.3);
+      padding: 4px 12px;
+      border-radius: 2px;
+      letter-spacing: 2px;
+      position: relative; z-index: 2;
+      animation: badgeBlink 4s ease-in-out infinite;
+    }
+
+    @keyframes badgeBlink {
+      0%,90%,100% { opacity: 1; }
+      95% { opacity: 0; }
+    }
+
+    /* SECTIONS */
+    .section {
+      padding: 28px 20px;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--teal);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      opacity: 0.8;
+    }
+
+    .section-label::before { content: '// '; color: var(--green); }
+
+    /* SKILL CARDS */
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .skill-card {
+      background: linear-gradient(135deg, rgba(22,53,90,0.6) 0%, rgba(1,18,34,0.9) 100%);
+      border: 1px solid rgba(64,138,154,0.25);
+      border-radius: 6px;
+      padding: 14px 12px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+
+    .skill-card:active { transform: scale(0.97); }
+
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--teal);
+    }
+
+    .skill-card .sk-icon {
+      font-size: 20px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .skill-card .sk-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(11px, 3vw, 13px);
+      font-weight: 700;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .skill-card .sk-desc {
+      font-size: clamp(9px, 2.2vw, 11px);
+      color: rgba(255,255,255,0.5);
+      line-height: 1.5;
+    }
+
+    /* CONTACT CARDS */
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(22,53,90,0.4);
+      border: 1px solid rgba(64,138,154,0.2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: white;
+      transition: background 0.3s, border-color 0.3s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-item::after {
+      content: '';
+      position: absolute;
+      right: -50px; top: 0; bottom: 0; width: 40px;
+      background: linear-gradient(90deg, transparent, rgba(64,138,154,0.15));
+      transition: right 0.3s;
+    }
+
+    .contact-item:active { transform: scale(0.98); background: rgba(64,138,154,0.15); }
+
+    .contact-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy), #0a2244);
+      border: 1.5px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(64,138,154,0.3);
+    }
+
+    .contact-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--teal);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .contact-value {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(12px, 3.5vw, 15px);
+      font-weight: 700;
+      color: white;
+      margin-top: 2px;
+    }
+
+    .contact-arrow {
+      margin-left: auto;
+      color: var(--teal);
+      font-size: 18px;
+      opacity: 0.6;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 10px;
+      color: rgba(64,138,154,0.4);
+      letter-spacing: 2px;
+    }
+
+    .footer .casklogic-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      color: var(--navy);
+      color: rgba(64,138,154,0.6);
+      letter-spacing: 4px;
+    }
+
+    /* MATRIX RAIN (canvas) */
+    #matrix-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+
+    #matrix-canvas.visible { opacity: 0.12; }
+
+    /* ALERT OVERLAY */
+    #alert-overlay {
+      position: fixed; inset: 0;
+      background: rgba(1,10,20,0.92);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    #alert-overlay.visible { opacity: 1; pointer-events: all; }
+
+    .alert-box {
+      background: #010a14;
+      border: 2px solid var(--red);
+      border-radius: 8px;
+      padding: 28px 24px;
+      max-width: 320px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255,32,32,0.4), inset 0 0 20px rgba(255,32,32,0.05);
+      animation: alertPulse 0.5s ease-in-out 3;
+    }
+
+    @keyframes alertPulse {
+      0%,100% { transform: scale(1); }
+      50%      { transform: scale(1.03); }
+    }
+
+    .alert-icon { font-size: 48px; margin-bottom: 12px; }
+    .alert-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      color: var(--red);
+      text-shadow: 0 0 10px var(--red);
+      margin-bottom: 8px;
+    }
+    .alert-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .alert-progress {
+      height: 4px;
+      background: rgba(255,32,32,0.2);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .alert-bar {
+      height: 100%;
+      background: var(--red);
+      width: 0%;
+      animation: fillBar 3s linear forwards;
+      box-shadow: 0 0 8px var(--red);
+    }
+    @keyframes fillBar { to { width: 100%; } }
+
+    .alert-btn {
+      background: transparent;
+      border: 1px solid var(--teal);
+      color: var(--teal);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+      padding: 10px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .alert-btn:hover, .alert-btn:active { background: rgba(64,138,154,0.2); }
+
+    /* VHS GLITCH */
+    .vhs {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent 0%, var(--red) 30%, var(--teal) 70%, transparent 100%);
+      z-index: 9997;
+      animation: vhsScan 3s ease-in-out infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes vhsScan {
+      0%   { top: 0; opacity: 0.7; }
+      50%  { top: 100vh; opacity: 0.3; }
+      100% { top: 0; opacity: 0.7; }
+    }
+
+    /* PARTICLES */
+    .particle {
+      position: fixed;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 2;
+      animation: particleFall linear infinite;
+    }
+
+    @keyframes particleFall {
+      0%   { transform: translateY(-10px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    /* REVEAL ANIMATION */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+  </style>
 </head>
 <body>
 
-    <div id="terminal">
-        <div id="log"></div>
-        <div><span class="cursor"></span></div>
+<!-- VHS SCAN LINE -->
+<div class="vhs"></div>
+
+<!-- MATRIX CANVAS -->
+<canvas id="matrix-canvas"></canvas>
+
+<!-- ═══════════════════════════════ PHASE 1: BOOT ═══════════════════════════ -->
+<div id="phase-boot">
+  <div id="terminal-output"></div>
+  <span id="cursor"></span>
+</div>
+
+<!-- ═══════════════════════════════ PHASE 2: SKULL ══════════════════════════ -->
+<div id="phase-skull">
+  <pre class="skull-ascii">
+  ░░░░░░░░░░░░░░░░░░░
+  ░░  ██████████  ░░
+  ░░ ██  ░░  ░░██ ░░
+  ░░ ██░░██░░██░░ ░░
+  ░░  ████░░████  ░░
+  ░░  ░░██████░░  ░░
+  ░░░░░░░░░░░░░░░░░░░
+  </pre>
+  <div class="skull-title">SISTEMA COMPROMESSO</div>
+  <div class="skull-sub">ACCESSO NFC RILEVATO...</div>
+</div>
+
+<!-- ═══════════════════════════════ ALERT ═══════════════════════════════════ -->
+<div id="alert-overlay">
+  <div class="alert-box">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-title">INTRUSION DETECTED</div>
+    <div class="alert-text">
+      Il tuo dispositivo è stato <span style="color:var(--red)">identificato</span>.<br/>
+      Caricamento dati agente in corso...
+    </div>
+    <div class="alert-progress"><div class="alert-bar"></div></div>
+    <button class="alert-btn" id="alert-dismiss">[ CONTINUA ]</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PHASE 3: CARD ═══════════════════════════ -->
+<div id="phase-card">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="circuit-bg"></div>
+    <div class="logo-wrap">
+      <!-- CaskLogic Logo SVG inline -->
+      <svg class="logo-svg" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Barrel body -->
+        <circle cx="90" cy="95" r="78" stroke="white" stroke-width="10" fill="none"
+          stroke-dasharray="420 60" stroke-dashoffset="-15"/>
+        <!-- Barrel stripes -->
+        <ellipse cx="90" cy="70" rx="48" ry="14" fill="white" opacity="0.9"/>
+        <ellipse cx="90" cy="95" rx="55" ry="10" fill="white" opacity="0.9"/>
+        <ellipse cx="90" cy="118" rx="48" ry="13" fill="white" opacity="0.9"/>
+        <!-- Circuit traces -->
+        <path d="M155 75 L172 75 L172 60 L186 60" stroke="#408A9A" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M155 95 L178 95" stroke="#408A9A" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M155 115 L172 115 L172 128 L186 128" stroke="#408A9A" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- Nodes -->
+        <circle cx="186" cy="60" r="7" stroke="#408A9A" stroke-width="4" fill="none"/>
+        <circle cx="178" cy="95" r="7" stroke="#408A9A" stroke-width="4" fill="none"/>
+        <circle cx="186" cy="128" r="7" stroke="#408A9A" stroke-width="4" fill="none"/>
+        <!-- Text -->
+        <text x="0" y="205" font-family="Arial" font-weight="900" font-size="36" fill="white">Cask</text>
+        <text x="76" y="205" font-family="Arial" font-weight="900" font-size="36" fill="#408A9A">Logic</text>
+      </svg>
     </div>
 
-    <div id="business-card">
-        <div class="header">
-            <h1>Piero Borgatta</h1>
-            <h2>Operations & IT Manager | CaskLogic</h2>
-        </div>
+    <div class="hero-name">Piero <span>Borgatta</span></div>
+    <div class="hero-role">Operations &amp; IT Manager | AI Automation</div>
+    <div class="hero-divider"></div>
+    <div class="glitch-badge">[ CASKLOGIC SOLUTIONS // AGENT CARD ]</div>
+  </div>
 
-        <div class="content">
-            <h3 class="section-title">Di cosa mi occupo</h3>
-            
-            <div class="skills-grid">
-                <div class="skill-item">
-                    <strong>Software & Automazione</strong>
-                    Sviluppo soluzioni per Distillerie e Cantine. Analisi dati con Power BI e Power Query.
-                </div>
-                <div class="skill-item">
-                    <strong>Infrastrutture IT & Sicurezza</strong>
-                    Sistemista, progettazione reti LAN/VLAN complesse, TVCC, e giunzioni in fibra ottica.
-                </div>
-                <div class="skill-item">
-                    <strong>Consulenza Doganale</strong>
-                    Supporto e compliance per il settore alcolici e accise.
-                </div>
-            </div>
-
-            <div class="contact-buttons">
-                <a href="tel:+393780016179" class="btn btn-primary">📞 Chiama +39 3780016179</a>
-                <a href="mailto:info@casklogic.com" class="btn btn-secondary">✉️ info@casklogic.com</a>
-                <a href="#" onclick="downloadVCard()" class="btn btn-secondary" style="background-color: #333;">💾 Salva in Rubrica</a>
-            </div>
-
-            <div class="joke-note">
-                Nessun dato è stato rubato durante l'apertura di questa pagina. Forse. 😉
-            </div>
-        </div>
+  <!-- SKILLS -->
+  <div class="section reveal" id="skills-section">
+    <div class="section-label">Competenze</div>
+    <div class="skill-grid">
+      <div class="skill-card">
+        <span class="sk-icon">🏭</span>
+        <div class="sk-title">Distillerie &amp; Cantine</div>
+        <div class="sk-desc">Software gestionali, compliance, ADM/Accise</div>
+      </div>
+      <div class="skill-card">
+        <span class="sk-icon">🛃</span>
+        <div class="sk-title">Dogana</div>
+        <div class="sk-desc">Consulenza doganale e pratiche doganali</div>
+      </div>
+      <div class="skill-card">
+        <span class="sk-icon">🤖</span>
+        <div class="sk-title">AI &amp; Automazione</div>
+        <div class="sk-desc">n8n, modelli AI, FastAPI, React, Docker</div>
+      </div>
+      <div class="skill-card">
+        <span class="sk-icon">🌐</span>
+        <div class="sk-title">Reti LAN/VLAN</div>
+        <div class="sk-desc">Aruba, SonicWall, UBNT, NetBox, Mimosa</div>
+      </div>
+      <div class="skill-card">
+        <span class="sk-icon">🔌</span>
+        <div class="sk-title">Fibra Ottica</div>
+        <div class="sk-desc">Giunzioni in fibra, infrastrutture ottiche</div>
+      </div>
+      <div class="skill-card">
+        <span class="sk-icon">📹</span>
+        <div class="sk-title">TVCC</div>
+        <div class="sk-desc">Videosorveglianza IP &gt;140 cam, Dahua</div>
+      </div>
+      <div class="skill-card">
+        <span class="sk-icon">📊</span>
+        <div class="sk-title">Power BI / Query</div>
+        <div class="sk-desc">Analisi dati avanzata, reportistica</div>
+      </div>
+      <div class="skill-card">
+        <span class="sk-icon">🖥️</span>
+        <div class="sk-title">Server &amp; Virtual</div>
+        <div class="sk-desc">XenServer, VMware, XCP-ng, Docker</div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // --- LOGICA DEL FINTO VIRUS ---
-        const logs = [
-            "NFC Connection Established...",
-            "Initializing payload.sh...",
-            "Bypassing local firewall...",
-            "Accessing root directory...",
-            "Extracting private keys [██████████░░] 80%",
-            "Downloading photo gallery...",
-            "Uploading to remote server (192.168.x.x)...",
-            "CRITICAL: System compromised.",
-            "...",
-            "Scherzo! Avvio interfaccia CaskLogic..."
-        ];
+  <!-- CONTACTS -->
+  <div class="section reveal" id="contact-section">
+    <div class="section-label">Contatti</div>
+    <div class="contact-list">
 
-        const logContainer = document.getElementById('log');
-        const terminal = document.getElementById('terminal');
-        const card = document.getElementById('business-card');
-        
-        let logIndex = 0;
+      <a href="tel:+393780016179" class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Telefono</div>
+          <div class="contact-value">+39 378 001 6179</div>
+        </div>
+        <div class="contact-arrow">›</div>
+      </a>
 
-        function addLog() {
-            if (logIndex < logs.length) {
-                const p = document.createElement('div');
-                p.className = 'log-line';
-                p.innerText = "> " + logs[logIndex];
-                logContainer.appendChild(p);
-                logIndex++;
-                
-                // Velocità randomica per simulare un terminale vero
-                let timeout = Math.random() * 400 + 100;
-                if(logIndex === logs.length - 1) timeout = 1000; // Pausa prima della fine
-                
-                setTimeout(addLog, timeout);
-            } else {
-                setTimeout(revealCard, 500);
-            }
-        }
+      <a href="mailto:info@casklogic.com" class="contact-item">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">info@casklogic.com</div>
+        </div>
+        <div class="contact-arrow">›</div>
+      </a>
 
-        function revealCard() {
-            // Aggiunge l'effetto flash
-            const flash = document.createElement('div');
-            flash.style.position = 'fixed';
-            flash.style.top = '0';
-            flash.style.left = '0';
-            flash.style.width = '100%';
-            flash.style.height = '100%';
-            flash.style.backgroundColor = 'white';
-            flash.style.zIndex = '9999';
-            flash.classList.add('flash');
-            document.body.appendChild(flash);
+      <a href="https://casklogic.com" target="_blank" class="contact-item">
+        <div class="contact-icon">🌐</div>
+        <div>
+          <div class="contact-label">Sito Web</div>
+          <div class="contact-value">casklogic.com</div>
+        </div>
+        <div class="contact-arrow">›</div>
+      </a>
 
-            // Nasconde il terminale e mostra il biglietto
-            terminal.style.display = 'none';
-            card.style.display = 'block';
-            document.title = "Piero Borgatta | CaskLogic";
-            
-            setTimeout(() => {
-                card.style.opacity = '1';
-            }, 50);
-            
-            // Rimuove il flash dal DOM dopo l'animazione
-            setTimeout(() => {
-                flash.remove();
-            }, 500);
-        }
+      <!-- SALVA CONTATTO vCard -->
+      <a href="#" id="vcard-btn" class="contact-item" onclick="downloadVCard(); return false;">
+        <div class="contact-icon">💾</div>
+        <div>
+          <div class="contact-label">Aggiungi ai contatti</div>
+          <div class="contact-value">Salva vCard</div>
+        </div>
+        <div class="contact-arrow">›</div>
+      </a>
 
-        // Avvia la sequenza all'apertura
-        window.onload = () => {
-            setTimeout(addLog, 500);
-        };
+    </div>
+  </div>
 
-        // Funzione per generare una vCard scaricabile al volo
-        function downloadVCard() {
-            const vcard = `BEGIN:VCARD
-VERSION:3.0
-FN:Piero Borgatta
-ORG:CaskLogic Solutions
-TITLE:Operations & IT Manager
-TEL;TYPE=CELL:+393780016179
-EMAIL:info@casklogic.com
-END:VCARD`;
-            
-            const blob = new Blob([vcard], { type: 'text/vcard' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Piero_Borgatta_CaskLogic.vcf';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-    </script>
+  <div class="footer">
+    <div class="casklogic-text">CASKLOGIC SOLUTIONS</div>
+    <div style="margin-top:8px">// END OF TRANSMISSION //</div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  MATRIX RAIN
+// ══════════════════════════════════════════════════════════════
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ#$%&@!?><';
+const fontSize = 13;
+let columns, drops;
+
+function initMatrix() {
+  columns = Math.floor(canvas.width / fontSize);
+  drops = Array(columns).fill(1);
+}
+initMatrix();
+
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(1, 10, 20, 0.07)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#408A9A';
+  ctx.font = fontSize + 'px Share Tech Mono';
+  drops.forEach((y, i) => {
+    const char = chars[Math.floor(Math.random() * chars.length)];
+    ctx.fillText(char, i * fontSize, y * fontSize);
+    if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  });
+}
+
+let matrixInterval;
+
+// ══════════════════════════════════════════════════════════════
+//  TERMINAL BOOT SEQUENCE
+// ══════════════════════════════════════════════════════════════
+const bootLines = [
+  { text: 'NFC_READER_v4.2.0 :: INITIALIZING...', cls: '' },
+  { text: 'TARGET_DEVICE_DETECTED :: UID_8F3A91C2', cls: 'teal' },
+  { text: 'SCANNING LOCAL NETWORK...', cls: '' },
+  { text: '> GATEWAY:       192.168.1.1', cls: '' },
+  { text: '> DEVICE_OS:     IDENTIFIED', cls: '' },
+  { text: '> LOCATION:      TRIANGULATING', cls: 'teal' },
+  { text: 'INITIATING PAYLOAD INJECTION...', cls: 'red' },
+  { text: '████████████████████ 100%', cls: '' },
+  { text: '[CRITICAL] SYSTEM ACCESS GRANTED', cls: 'red' },
+  { text: 'DEPLOYING AGENT BORGATTA...', cls: 'teal' },
+  { text: '', cls: '' },
+  { text: '> CASKLOGIC SOLUTIONS :: ONLINE', cls: 'white' },
+];
+
+const terminalOut = document.getElementById('terminal-output');
+
+async function runBoot() {
+  for (let i = 0; i < bootLines.length; i++) {
+    await sleep(i < 3 ? 180 : i < 7 ? 130 : 100);
+    const div = document.createElement('div');
+    div.className = 'terminal-line typed' + (bootLines[i].cls ? ' ' + bootLines[i].cls : '');
+    div.textContent = bootLines[i].text;
+    terminalOut.appendChild(div);
+    terminalOut.scrollTop = terminalOut.scrollHeight;
+  }
+
+  // Start matrix
+  canvas.classList.add('visible');
+  matrixInterval = setInterval(drawMatrix, 50);
+
+  await sleep(400);
+  // Show boot phase out, skull phase in
+  document.getElementById('phase-boot').classList.add('hidden');
+
+  await sleep(500);
+  document.getElementById('phase-skull').classList.add('visible');
+
+  // Shake
+  document.body.style.animation = 'glitchText 0.1s infinite';
+  await sleep(1800);
+  document.body.style.animation = '';
+  document.getElementById('phase-skull').classList.remove('visible');
+
+  // Alert overlay
+  await sleep(200);
+  showAlert();
+}
+
+function showAlert() {
+  const overlay = document.getElementById('alert-overlay');
+  overlay.classList.add('visible');
+  document.getElementById('alert-dismiss').addEventListener('click', () => {
+    overlay.classList.remove('visible');
+    revealCard();
+  });
+  // Auto dismiss after 4s
+  setTimeout(() => {
+    if (overlay.classList.contains('visible')) {
+      overlay.classList.remove('visible');
+      revealCard();
+    }
+  }, 4200);
+}
+
+function revealCard() {
+  clearInterval(matrixInterval);
+  // Keep faint matrix
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  canvas.classList.remove('visible');
+
+  document.getElementById('phase-card').classList.add('visible');
+
+  // Staggered reveal
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('show'), i * 180);
+    });
+  }, 300);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ══════════════════════════════════════════════════════════════
+//  VCARD DOWNLOAD
+// ══════════════════════════════════════════════════════════════
+function downloadVCard() {
+  const vcard = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    'FN:Piero Borgatta',
+    'N:Borgatta;Piero;;;',
+    'ORG:CaskLogic Solutions',
+    'TITLE:Operations & IT Manager | Automation & AI',
+    'TEL;TYPE=CELL:+393780016179',
+    'EMAIL:info@casklogic.com',
+    'URL:https://casklogic.com',
+    'ADR;TYPE=WORK:;;Calamandrana;Asti;;;IT',
+    'NOTE:Consulenza IT, Reti LAN/VLAN, Fibra Ottica, TVCC, Distillerie & Cantine, Dogana, AI & Automazione, Power BI',
+    'END:VCARD'
+  ].join('\r\n');
+
+  const blob = new Blob([vcard], { type: 'text/vcard' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Piero_Borgatta_CaskLogic.vcf';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  START
+// ══════════════════════════════════════════════════════════════
+runBoot();
+</script>
 </body>
 </html>
