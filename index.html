@@ -656,4 +656,18 @@ async function boot() {
 
 function reveal() {
   clearInterval(mat);
-  cx.
+  cx.clearRect(0, 0, cvs.width, cvs.height);
+  cvs.classList.remove('on');
+  document.getElementById('p-card').classList.add('on');
+  ['r0','r1','r2','r3'].forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('show');
+    }, i * 180);
+  });
+}
+
+boot();
+</script>
+</body>
+</html>
