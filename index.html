@@ -667,7 +667,142 @@ function reveal() {
   });
 }
 
+/* ══════════════════════════════════════════════
+   TRACKING → TELEGRAM
+   Istruzioni:
+   1. Apri Telegram → cerca @BotFather → /newbot
+      → dai un nome → copia il TOKEN
+   2. Scrivi un messaggio al tuo bot
+   3. Vai su: https://api.telegram.org/bot<TOKEN>/getUpdates
+      → copia il valore di "id" dentro "chat"
+   4. Incolla TOKEN e CHAT_ID qui sotto
+══════════════════════════════════════════════ */
+const TG_TOKEN   = '8745354735:AAHP66fNf4oaIc63JX_Kx7WUIG2186stLAo';
+const TG_CHAT_ID = 'INSERISCI_CHAT_ID';
+
+async function track() {
+  try {
+    /* ── dati dispositivo e browser ── */
+    const ua         = navigator.userAgent;
+    const lang       = navigator.language || navigator.languages?.[0] || '—';
+    const langs      = (navigator.languages || []).join(', ') || '—';
+    const platform   = navigator.platform || '—';
+    const vendor     = navigator.vendor   || '—';
+    const cores      = navigator.hardwareConcurrency || '—';
+    const memory     = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '—';
+    const touch      = navigator.maxTouchPoints > 0
+                       ? `sì (${navigator.maxTouchPoints} punti)` : 'no';
+    const cookieOk   = navigator.cookieEnabled ? 'sì' : 'no';
+    const doNotTrack = navigator.doNotTrack || '—';
+    const online     = navigator.onLine ? 'sì' : 'no';
+
+    /* ── schermo ── */
+    const sw   = screen.width,  sh   = screen.height;
+    const sdpr = window.devicePixelRatio || 1;
+    const ww   = window.innerWidth,  wh = window.innerHeight;
+    const cDepth = screen.colorDepth + ' bit';
+
+    /* ── orario e fuso ── */
+    const tz   = Intl.DateTimeFormat().resolvedOptions().timeZone || '—';
+    const tzOff = new Date().getTimezoneOffset();
+    const tzStr = `UTC${tzOff <= 0 ? '+' : ''}${-tzOff/60}`;
+    const now   = new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' });
+
+    /* ── connessione ── */
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const connType   = conn?.effectiveType || '—';
+    const connDown   = conn?.downlink ? conn.downlink + ' Mbps' : '—';
+    const connSave   = conn?.saveData ? 'sì' : 'no';
+
+    /* ── referrer ── */
+    const ref = document.referrer || '— (NFC diretto)';
+
+    /* ── OS parsing dal UA ── */
+    let os = '—';
+    if (/Windows NT 10/i.test(ua))        os = 'Windows 10/11';
+    else if (/Windows NT 6\.1/i.test(ua)) os = 'Windows 7';
+    else if (/Mac OS X/i.test(ua))        os = 'macOS';
+    else if (/iPhone/i.test(ua))          os = 'iPhone / iOS';
+    else if (/iPad/i.test(ua))            os = 'iPad / iPadOS';
+    else if (/Android/i.test(ua))         os = 'Android';
+    else if (/Linux/i.test(ua))           os = 'Linux';
+
+    /* ── browser parsing ── */
+    let browser = '—';
+    if (/CriOS/i.test(ua))        browser = 'Chrome iOS';
+    else if (/FxiOS/i.test(ua))   browser = 'Firefox iOS';
+    else if (/EdgA/i.test(ua))    browser = 'Edge Android';
+    else if (/Edg\//i.test(ua))   browser = 'Edge';
+    else if (/Chrome/i.test(ua) && !/Chromium/i.test(ua)) browser = 'Chrome';
+    else if (/Firefox/i.test(ua)) browser = 'Firefox';
+    else if (/Safari/i.test(ua))  browser = 'Safari';
+    else if (/MSIE|Trident/i.test(ua)) browser = 'Internet Explorer';
+
+    /* ── geo via ipinfo.io ── */
+    const geo     = await fetch('https://ipinfo.io/json').then(r => r.json()).catch(() => ({}));
+    const ip      = geo.ip       || '—';
+    const city    = geo.city     || '—';
+    const region  = geo.region   || '—';
+    const country = geo.country  || '—';
+    const org     = geo.org      || '—';
+    const coords  = geo.loc      || '';
+    const mapLink = coords ? `https://maps.google.com/?q=${coords}` : '—';
+    const postal  = geo.postal   || '—';
+
+    /* ── batteria (dove supportata) ── */
+    let battery = '—';
+    if (navigator.getBattery) {
+      const b = await navigator.getBattery().catch(() => null);
+      if (b) battery = `${Math.round(b.level * 100)}% ${b.charging ? '⚡ in carica' : '🔋'}`;
+    }
+
+    /* ── messaggio Telegram ── */
+    const msg = [
+      `🔔 *Biglietto NFC aperto\\!*`,
+      ``,
+      `🕐 *Quando:* ${now}`,
+      `📍 *Città:* ${city}, ${region} \\(${country}\\)`,
+      `🌐 *IP:* \`${ip}\``,
+      `🏢 *Provider:* ${org}`,
+      `📮 *CAP:* ${postal}`,
+      `🗺 *Mappa:* ${mapLink}`,
+      ``,
+      `📱 *Dispositivo*`,
+      `• OS: ${os}`,
+      `• Browser: ${browser}`,
+      `• Schermo: ${sw}×${sh} px \\(DPR ${sdpr}\\)`,
+      `• Viewport: ${ww}×${wh} px`,
+      `• Colori: ${cDepth}`,
+      `• RAM: ${memory}`,
+      `• CPU core: ${cores}`,
+      `• Touch: ${touch}`,
+      `• Batteria: ${battery}`,
+      ``,
+      `🌍 *Lingua:* ${lang} \\[${langs}\\]`,
+      `🕐 *Fuso orario:* ${tz} \\(${tzStr}\\)`,
+      `📶 *Connessione:* ${connType} · ${connDown}`,
+      `💾 *Risparmio dati:* ${connSave}`,
+      `🍪 *Cookie:* ${cookieOk}`,
+      `↩️ *Referrer:* ${ref}`,
+      ``,
+      `🔍 *User Agent:*`,
+      `\`${ua.slice(0, 200)}\``,
+    ].join('\n');
+
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id:    TG_CHAT_ID,
+        text:       msg,
+        parse_mode: 'MarkdownV2',
+        disable_web_page_preview: true,
+      }),
+    });
+  } catch (_) { /* silenzioso */ }
+}
+
+track(); // parte subito, in background, non blocca nulla
 boot();
-</script>
 </body>
 </html>
