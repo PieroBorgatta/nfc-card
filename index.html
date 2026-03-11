@@ -55,9 +55,9 @@
       opacity: .45; animation: vhs 7s ease-in-out infinite;
     }
     @keyframes vhs {
-      0%   { top: 0;      opacity: .45 }
+      0%   { top: 0;     opacity: .45 }
       50%  { top: 100vh; opacity: .14 }
-      100% { top: 0;      opacity: .45 }
+      100% { top: 0;     opacity: .45 }
     }
 
     /* matrix */
@@ -67,7 +67,9 @@
     }
     #mx.on { opacity: .11; }
 
-    /* ════ PHASE 1 — BOOT ════ */
+    /* ══════════════════════════════
+       PHASE 1 — BOOT
+    ══════════════════════════════ */
     #p-boot {
       position: fixed; inset: 0; z-index: 100;
       background: #010a14;
@@ -98,7 +100,9 @@
     }
     @keyframes cur { 50% { opacity: 0; } }
 
-    /* ════ PHASE 2 — SKULL ════ */
+    /* ══════════════════════════════
+       PHASE 2 — SKULL
+    ══════════════════════════════ */
     #p-skull {
       position: fixed; inset: 0; z-index: 99;
       background: #010a14;
@@ -132,7 +136,9 @@
       100% { transform: translate(0,0); }
     }
 
-    /* ════ PHASE 3 — ALERT ════ */
+    /* ══════════════════════════════
+       PHASE 3 — ALERT
+    ══════════════════════════════ */
     #p-alert {
       position: fixed; inset: 0; z-index: 200;
       background: rgba(1,10,20,.93);
@@ -163,7 +169,9 @@
     }
     .abox-btn:hover, .abox-btn:active { background: rgba(64,138,154,.15); }
 
-    /* ════ PHASE 4 — MAIN PAGE ════ */
+    /* ══════════════════════════════
+       PHASE 4 — MAIN PAGE
+    ══════════════════════════════ */
     #p-card {
       position: relative; z-index: 2;
       opacity: 0; transform: translateY(24px);
@@ -177,6 +185,7 @@
       padding: 0 16px 64px;
     }
 
+    /* ── HERO BANNER ── */
     .hero-banner {
       padding: 52px 0 40px;
       border-bottom: 1px solid var(--line);
@@ -216,6 +225,7 @@
     }
     .hero-intro strong { color: var(--text); font-weight: 700; }
 
+    /* wordmark inside hero */
     .wordmark {
       font-family: var(--display);
       font-size: clamp(12px, 3.5vw, 15px);
@@ -225,12 +235,14 @@
     .wm1 { color: #fff; }
     .wm2 { color: var(--accent2); }
 
+    /* ── SECTION LABEL ── */
     .section-label {
       font-family: var(--mono); font-size: 10px;
       color: var(--accent); letter-spacing: .22em; text-transform: uppercase;
       margin-bottom: 20px; opacity: .75;
     }
 
+    /* ── SERVICE GRID ── */
     .svc-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -263,6 +275,7 @@
       font-size: 13px; color: var(--muted); line-height: 1.58;
     }
 
+    /* ── CONTACT BLOCK ── */
     .contact-block {
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -313,11 +326,13 @@
 
     .cr-arrow { color: var(--accent2); font-size: 18px; opacity: .6; }
 
+    /* primary contact row */
     .contact-row.primary {
       background: rgba(94,208,192,.06);
     }
     .contact-row.primary .cr-value { color: var(--accent2); }
 
+    /* ── CLOSING ── */
     .closing {
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -353,15 +368,18 @@
       color: var(--text);
     }
 
+    /* ── FOOTER ── */
     .footer {
       text-align: center;
       font-family: var(--mono); font-size: 10px;
       color: rgba(255,255,255,.22); letter-spacing: 2px;
     }
 
+    /* ── reveal ── */
     .rev { opacity: 0; transform: translateY(14px); transition: opacity .65s, transform .65s; }
     .rev.show { opacity: 1; transform: translateY(0); }
 
+    /* ── frankenstein quote ── */
     .fk-quote {
       font-family: var(--mono); font-size: 11px;
       color: rgba(94,208,192,.45); font-style: italic;
@@ -380,12 +398,14 @@
 <div class="vhs"></div>
 <canvas id="mx"></canvas>
 
+<!-- ════ PHASE 1 – BOOT ════ -->
 <div id="p-boot">
   <div class="boot-label">// NFC_READER v4.2 :: PAYLOAD BOOT</div>
   <div id="tlines"></div>
   <span id="caret"></span>
 </div>
 
+<!-- ════ PHASE 2 – SKULL ════ -->
 <div id="p-skull">
   <pre class="skull">
   ░░░░░░░░░░░░░░░░░░░░
@@ -399,6 +419,7 @@
   <div class="skull-s">"LUPO ULULÀ... E CASTELLO ULULÌ"</div>
 </div>
 
+<!-- ════ PHASE 3 – ALERT ════ -->
 <div id="p-alert">
   <div class="abox">
     <div class="abox-ico">⚠️</div>
@@ -413,9 +434,11 @@
   </div>
 </div>
 
+<!-- ════ PHASE 4 – MAIN PAGE ════ -->
 <div id="p-card">
   <div class="wrap">
 
+    <!-- HERO -->
     <header class="hero-banner rev" id="r0">
       <div class="wordmark"><span class="wm1">Cask</span><span class="wm2">Logic</span></div>
       <div class="hero-tag">
@@ -425,12 +448,13 @@
       <h1 class="hero-title">Hai appena<br><span class="hl">attivato</span><br>il contatto.</h1>
       <p class="hero-intro">
         Niente panico. Non è un virus. È solo <strong>Piero</strong> —
-        consulenza informatica, AI & automazione, reti, fibra ottica,
+        consulenza informatica, AI &amp; automazione, reti, fibra ottica,
         TVCC, Power BI, software per distillerie e cantine, consulenza doganale.
       </p>
       <p class="fk-quote">"Rimetta, a, posto, la, candela!"</p>
     </header>
 
+    <!-- SERVICES -->
     <div class="rev" id="r1">
       <div class="section-label">Cosa faccio</div>
       <div class="svc-grid">
@@ -477,6 +501,7 @@
       </div>
     </div>
 
+    <!-- CONTACTS -->
     <div class="rev" id="r2">
       <div class="section-label">Contatti</div>
       <div class="contact-block">
@@ -506,12 +531,12 @@
             </div>
             <span class="cr-arrow">›</span>
           </a>
-          <a class="contact-row" href="mailto:piero@casklogic.com">
+          <a class="contact-row" href="/cdn-cgi/l/email-protection#fa93949c95ba999b899196959d9399d4999597c5898f98909f998ec7b995948e9b8e8e95dfc8ca9e9bdfc8ca98939d96939f8e8e95dfc8cab4bcb9">
             <div class="cr-left">
               <div class="cr-icon">✉️</div>
               <div>
                 <div class="cr-label">Email</div>
-                <div class="cr-value">piero@casklogic.com</div>
+                <div class="cr-value"><span class="__cf_email__" data-cfemail="2f464149406f4c4e5c44434048464c014c4042">[email&#160;protected]</span></div>
               </div>
             </div>
             <span class="cr-arrow">›</span>
@@ -530,6 +555,7 @@
       </div>
     </div>
 
+    <!-- CLOSING -->
     <div class="closing rev" id="r3">
       <div class="closing-eyebrow">Ultimo avviso</div>
       <h2>Questa pagina non urla a caso.</h2>
@@ -537,7 +563,7 @@
       <p class="fk-quote" style="margin-bottom:20px">"Gobba? Quale gobba?"</p>
       <div class="cta-row">
         <a class="btn btn-p" href="tel:+393780016179">Chiama ora →</a>
-        <a class="btn btn-s" href="mailto:piero@casklogic.com">Scrivi una mail</a>
+        <a class="btn btn-s" href="/cdn-cgi/l/email-protection#acc5c2cac3eccfcddfc7c0c3cbc5cf82cfc3c193dfd9cec6c9cfd891fccddec0c5cdc1c3c2c9">Scrivi una mail</a>
       </div>
     </div>
 
@@ -545,7 +571,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── MATRIX ── */
 const cvs = document.getElementById('mx');
 const cx  = cvs.getContext('2d');
@@ -641,31 +667,126 @@ function reveal() {
   });
 }
 
-/* ── TRACKING ── */
+/* ══════════════════════════════════════════════
+   TRACKING → TELEGRAM
+   Istruzioni:
+   1. Apri Telegram → cerca @BotFather → /newbot
+      → dai un nome → copia il TOKEN
+   2. Scrivi un messaggio al tuo bot
+   3. Vai su: https://api.telegram.org/bot<TOKEN>/getUpdates
+      → copia il valore di "id" dentro "chat"
+   4. Incolla TOKEN e CHAT_ID qui sotto
+══════════════════════════════════════════════ */
 const TG_TOKEN   = '8745354735:AAHP66fNf4oaIc63JX_Kx7WUIG2186stLAo';
-const TG_CHAT_ID = 'INSERISCI_CHAT_ID'; // <--- CAMBIA QUESTO!
+const TG_CHAT_ID = '8776627225';
 
 async function track() {
   try {
+    /* ── dati dispositivo e browser ── */
     const ua         = navigator.userAgent;
-    const lang       = navigator.language || '—';
+    const lang       = navigator.language || navigator.languages?.[0] || '—';
+    const langs      = (navigator.languages || []).join(', ') || '—';
     const platform   = navigator.platform || '—';
-    const memory     = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '—';
+    const vendor     = navigator.vendor   || '—';
     const cores      = navigator.hardwareConcurrency || '—';
-    const sw = screen.width, sh = screen.height;
-    
-    const geo = await fetch('https://ipinfo.io/json').then(r => r.json()).catch(() => ({}));
-    const coords = geo.loc || '';
-    const mapLink = coords ? `https://www.google.com/maps?q=${coords}` : '—';
+    const memory     = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '—';
+    const touch      = navigator.maxTouchPoints > 0
+                       ? `sì (${navigator.maxTouchPoints} punti)` : 'no';
+    const cookieOk   = navigator.cookieEnabled ? 'sì' : 'no';
+    const doNotTrack = navigator.doNotTrack || '—';
+    const online     = navigator.onLine ? 'sì' : 'no';
 
+    /* ── schermo ── */
+    const sw   = screen.width,  sh   = screen.height;
+    const sdpr = window.devicePixelRatio || 1;
+    const ww   = window.innerWidth,  wh = window.innerHeight;
+    const cDepth = screen.colorDepth + ' bit';
+
+    /* ── orario e fuso ── */
+    const tz   = Intl.DateTimeFormat().resolvedOptions().timeZone || '—';
+    const tzOff = new Date().getTimezoneOffset();
+    const tzStr = `UTC${tzOff <= 0 ? '+' : ''}${-tzOff/60}`;
+    const now   = new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' });
+
+    /* ── connessione ── */
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const connType   = conn?.effectiveType || '—';
+    const connDown   = conn?.downlink ? conn.downlink + ' Mbps' : '—';
+    const connSave   = conn?.saveData ? 'sì' : 'no';
+
+    /* ── referrer ── */
+    const ref = document.referrer || '— (NFC diretto)';
+
+    /* ── OS parsing dal UA ── */
+    let os = '—';
+    if (/Windows NT 10/i.test(ua))        os = 'Windows 10/11';
+    else if (/Windows NT 6\.1/i.test(ua)) os = 'Windows 7';
+    else if (/Mac OS X/i.test(ua))        os = 'macOS';
+    else if (/iPhone/i.test(ua))          os = 'iPhone / iOS';
+    else if (/iPad/i.test(ua))            os = 'iPad / iPadOS';
+    else if (/Android/i.test(ua))         os = 'Android';
+    else if (/Linux/i.test(ua))           os = 'Linux';
+
+    /* ── browser parsing ── */
+    let browser = '—';
+    if (/CriOS/i.test(ua))        browser = 'Chrome iOS';
+    else if (/FxiOS/i.test(ua))   browser = 'Firefox iOS';
+    else if (/EdgA/i.test(ua))    browser = 'Edge Android';
+    else if (/Edg\//i.test(ua))   browser = 'Edge';
+    else if (/Chrome/i.test(ua) && !/Chromium/i.test(ua)) browser = 'Chrome';
+    else if (/Firefox/i.test(ua)) browser = 'Firefox';
+    else if (/Safari/i.test(ua))  browser = 'Safari';
+    else if (/MSIE|Trident/i.test(ua)) browser = 'Internet Explorer';
+
+    /* ── geo via ipinfo.io ── */
+    const geo     = await fetch('https://ipinfo.io/json').then(r => r.json()).catch(() => ({}));
+    const ip      = geo.ip       || '—';
+    const city    = geo.city     || '—';
+    const region  = geo.region   || '—';
+    const country = geo.country  || '—';
+    const org     = geo.org      || '—';
+    const coords  = geo.loc      || '';
+    const mapLink = coords ? `https://maps.google.com/?q=${coords}` : '—';
+    const postal  = geo.postal   || '—';
+
+    /* ── batteria (dove supportata) ── */
+    let battery = '—';
+    if (navigator.getBattery) {
+      const b = await navigator.getBattery().catch(() => null);
+      if (b) battery = `${Math.round(b.level * 100)}% ${b.charging ? '⚡ in carica' : '🔋'}`;
+    }
+
+    /* ── messaggio Telegram ── */
     const msg = [
-      `🔔 *Biglietto NFC aperto!*`,
-      `📍 *Città:* ${geo.city || '—'}, ${geo.country || '—'}`,
-      `🌐 *IP:* \`${geo.ip || '—'}\``,
-      `📱 *OS:* ${platform}`,
-      `🖥 *Schermo:* ${sw}x${sh}`,
-      `🗺 *Mappa:* ${mapLink}`,
-      `🔍 *Browser:* ${ua.slice(0, 100)}...`
+      `🔔 Biglietto NFC aperto!`,
+      ``,
+      `🕐 Quando: ${now}`,
+      `📍 Città: ${city}, ${region} (${country})`,
+      `🌐 IP: ${ip}`,
+      `🏢 Provider: ${org}`,
+      `📮 CAP: ${postal}`,
+      `🗺 Mappa: ${mapLink}`,
+      ``,
+      `📱 Dispositivo`,
+      `• OS: ${os}`,
+      `• Browser: ${browser}`,
+      `• Schermo: ${sw}x${sh} px (DPR ${sdpr})`,
+      `• Viewport: ${ww}x${wh} px`,
+      `• Colori: ${cDepth}`,
+      `• RAM: ${memory}`,
+      `• CPU core: ${cores}`,
+      `• Touch: ${touch}`,
+      `• Batteria: ${battery}`,
+      ``,
+      `🌍 Lingua: ${lang} [${langs}]`,
+      `🕐 Fuso orario: ${tz} (${tzStr})`,
+      `📶 Connessione: ${connType} - ${connDown}`,
+      `💾 Risparmio dati: ${connSave}`,
+      `🍪 Cookie: ${cookieOk}`,
+      `↩️ Referrer: ${ref}`,
+      ``,
+      `🔍 User Agent:`,
+      ua.slice(0, 300),
     ].join('\n');
 
     await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
@@ -673,17 +794,15 @@ async function track() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: TG_CHAT_ID,
-        text: msg,
-        parse_mode: 'Markdown',
+        text:    msg,
         disable_web_page_preview: true,
       }),
     });
-  } catch (e) { console.error(e); }
+  } catch (_) { /* silenzioso */ }
 }
 
-// Avvio sequenza
+track(); // parte subito, in background, non blocca nulla
 boot();
-track();
 </script>
 </body>
 </html>
