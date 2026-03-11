@@ -379,6 +379,15 @@
     .rev { opacity: 0; transform: translateY(14px); transition: opacity .65s, transform .65s; }
     .rev.show { opacity: 1; transform: translateY(0); }
 
+    /* ── frankenstein quote ── */
+    .fk-quote {
+      font-family: var(--mono); font-size: 11px;
+      color: rgba(94,208,192,.45); font-style: italic;
+      letter-spacing: .04em; line-height: 1.5;
+      margin-top: 10px;
+    }
+    .fk-quote::before { content: '// '; color: rgba(94,208,192,.25); }
+
     @media(prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
@@ -406,8 +415,8 @@
   ░░  █████████████   ░░
   ░░   ░░██████████   ░░
   ░░░░░░░░░░░░░░░░░░░░</pre>
-  <div class="skull-h">SISTEMA COMPROMESSO</div>
-  <div class="skull-s">NFC TOKEN ACQUISITO...</div>
+  <div class="skull-h">È VIVO! È VIVO!</div>
+  <div class="skull-s">"LUPO ULULÀ... E CASTELLO ULULÌ"</div>
 </div>
 
 <!-- ════ PHASE 3 – ALERT ════ -->
@@ -417,7 +426,8 @@
     <div class="abox-h">INTRUSION DETECTED</div>
     <div class="abox-body">
       Dispositivo <span>identificato</span>.<br>
-      Caricamento agente in corso...
+      Caricamento agente in corso...<br><br>
+      <em style="font-size:11px;opacity:.6">"Potrebbe piovere!"</em>
     </div>
     <div class="prog"><div class="prog-bar"></div></div>
     <button class="abox-btn" id="abtn">[ CONTINUA ]</button>
@@ -441,6 +451,7 @@
         consulenza informatica, AI &amp; automazione, reti, fibra ottica,
         TVCC, Power BI, software per distillerie e cantine, consulenza doganale.
       </p>
+      <p class="fk-quote">"Rimetta, a, posto, la, candela!"</p>
     </header>
 
     <!-- SERVICES -->
@@ -497,6 +508,7 @@
         <div class="contact-header">
           <h2>Parliamo</h2>
           <p>Chiamata diretta, messaggio o mail — scegli tu come iniziare.</p>
+          <p class="fk-quote" style="margin-top:8px">"Taffetà caro. Taffetà tesorino."</p>
         </div>
         <div class="contact-rows">
           <a class="contact-row primary" href="tel:+393780016179">
@@ -519,12 +531,12 @@
             </div>
             <span class="cr-arrow">›</span>
           </a>
-          <a class="contact-row" href="mailto:info@casklogic.com?subject=Contatto%20da%20biglietto%20NFC">
+          <a class="contact-row" href="/cdn-cgi/l/email-protection#fa93949c95ba999b899196959d9399d4999597c5898f98909f998ec7b995948e9b8e8e95dfc8ca9e9bdfc8ca98939d96939f8e8e95dfc8cab4bcb9">
             <div class="cr-left">
               <div class="cr-icon">✉️</div>
               <div>
                 <div class="cr-label">Email</div>
-                <div class="cr-value">info@casklogic.com</div>
+                <div class="cr-value"><span class="__cf_email__" data-cfemail="2f464149406f4c4e5c44434048464c014c4042">[email&#160;protected]</span></div>
               </div>
             </div>
             <span class="cr-arrow">›</span>
@@ -548,17 +560,18 @@
       <div class="closing-eyebrow">Ultimo avviso</div>
       <h2>Questa pagina non urla a caso.</h2>
       <p>È volutamente teatrale. Ma il succo è semplice: se ti servono visione operativa, tecnica vera e soluzioni concrete, sai dove trovarmi.</p>
+      <p class="fk-quote" style="margin-bottom:20px">"Gobba? Quale gobba?"</p>
       <div class="cta-row">
         <a class="btn btn-p" href="tel:+393780016179">Chiama ora →</a>
-        <a class="btn btn-s" href="mailto:info@casklogic.com?subject=Parliamone">Scrivi una mail</a>
+        <a class="btn btn-s" href="/cdn-cgi/l/email-protection#acc5c2cac3eccfcddfc7c0c3cbc5cf82cfc3c193dfd9cec6c9cfd891fccddec0c5cdc1c3c2c9">Scrivi una mail</a>
       </div>
     </div>
 
-    <p class="footer">CaskLogic Solutions · Piero Borgatta · NFC contact payload</p>
+    <p class="footer">CaskLogic Solutions · Piero Borgatta · NFC contact payload<br><span style="opacity:.4;font-style:italic">"Si può fare!"</span></p>
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── MATRIX ── */
 const cvs = document.getElementById('mx');
 const cx  = cvs.getContext('2d');
@@ -601,6 +614,7 @@ const LINES = [
   { t:'[OK] SYSTEM ACCESS GRANTED',                    c:'r' },
   { t:'> deploying agent BORGATTA…',                   c:'c' },
   { t:'> CASKLOGIC SOLUTIONS :: ONLINE',               c:'w' },
+  { t:'> "Si può fare!" — avvio completato.',           c:'c' },
 ];
 
 const tlines = document.getElementById('tlines');
@@ -642,18 +656,4 @@ async function boot() {
 
 function reveal() {
   clearInterval(mat);
-  cx.clearRect(0, 0, cvs.width, cvs.height);
-  cvs.classList.remove('on');
-  document.getElementById('p-card').classList.add('on');
-  ['r0','r1','r2','r3'].forEach((id, i) => {
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) el.classList.add('show');
-    }, i * 180);
-  });
-}
-
-boot();
-</script>
-</body>
-</html>
+  cx.
