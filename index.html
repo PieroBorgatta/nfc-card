@@ -254,6 +254,8 @@
       flex: 1;
       position: relative;
       min-height: 62vh;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     }
 
@@ -263,6 +265,9 @@
       animation: reveal .5s ease forwards;
       white-space: pre-wrap;
       color: #EAF3F6;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .line.muted { color: rgba(234,243,246,.62); }
@@ -427,8 +432,11 @@
       .topbar { margin-bottom: 14px; font-size: 11px; }
       .intro { padding: 22px 18px 22px; }
       .terminal { min-height: 74vh; }
-      .terminal-body { padding: 14px 14px 88px; min-height: 68vh; font-size: 13px; }
+      .terminal-body { padding: 14px 14px 88px; min-height: 68vh; font-size: 12px; line-height: 1.6; }
+      .terminal-top { padding: 12px 14px; font-size: 10px; }
       .panic-title { display: block; }
+      .panic-title h1 { font-size: clamp(30px, 10vw, 48px); max-width: 9ch; }
+      .panic-sub { font-size: 14px; max-width: 22ch; }
       .actions { flex-direction: column; }
       .btn { width: 100%; text-align: center; }
       .contact-box a { font-size: 17px; }
@@ -486,7 +494,7 @@
         <div class="panic-title">
           <div class="panic-kicker">CaskLogic Solutions</div>
           <h1>Accesso rilevato.</h1>
-          <p class="panic-sub">Consulenza doganale, software verticali, reti, sistemi e automazione. Sì, il biglietto fa sul serio.</p>
+          <p class="panic-sub">Consulenza doganale, software per distillerie e cantine, reti, sistemi e automazione. Il biglietto ha capito il suo compito.</p>
         </div>
         <div class="terminal-top">
           <div class="dots">
@@ -494,7 +502,7 @@
             <span class="dot yellow"></span>
             <span class="dot green"></span>
           </div>
-          <div>secure-session://casklogic/nfc</div>
+          <div>sessione-sicura://casklogic/nfc</div>
         </div>
         <div class="terminal-body" id="terminal"></div>
       </section>
@@ -536,15 +544,15 @@
     const terminal = document.getElementById('terminal');
 
     const lines = [
-      { text: 'booting nfc payload...', cls: 'prompt muted' },
-      { text: 'reading signature: CASKLOGIC_SOLUTIONS', cls: 'prompt' },
-      { text: 'identity confirmed', cls: 'prompt ok' },
-      { text: 'loading modules: doganale, distillerie, cantine', cls: 'prompt' },
-      { text: 'loading modules: lan, vlan, tvcc, fibra, sistemistica', cls: 'prompt' },
-      { text: 'loading modules: power bi, power query, automation', cls: 'prompt' },
-      { text: 'warning: unusually competent operator detected', cls: 'prompt warn' },
-      { text: 'status: private nfc landing / no search indexing', cls: 'prompt muted' },
-      { text: 'opening interface...', cls: 'prompt ok' }
+      { text: 'avvio payload nfc...', cls: 'prompt muted' },
+      { text: 'lettura firma: CASKLOGIC_SOLUTIONS', cls: 'prompt' },
+      { text: 'identità verificata', cls: 'prompt ok' },
+      { text: 'caricamento moduli: consulenza doganale, distillerie, cantine', cls: 'prompt' },
+      { text: 'caricamento moduli: reti lan, vlan, tvcc, fibra, sistemistica', cls: 'prompt' },
+      { text: 'caricamento moduli: power bi, power query, automazione', cls: 'prompt' },
+      { text: 'profilo rilevato: operatore tecnicamente pericoloso', cls: 'prompt warn' },
+      { text: 'stato: landing privata nfc / indicizzazione disattivata', cls: 'prompt muted' },
+      { text: 'apertura interfaccia...', cls: 'prompt ok' }
     ];
 
     function appendLine(text, cls, delay) {
@@ -565,7 +573,7 @@
       burst.style.fontSize = 'clamp(20px, 6vw, 34px)';
       burst.style.fontWeight = '800';
       burst.style.lineHeight = '1.05';
-      burst.textContent = 'WELCOME. YOU FOUND THE INTERESTING CARD.';
+      burst.textContent = 'ACCESSO RILEVATO. BIGLIETTO NON CONVENZIONALE.';
       terminal.appendChild(burst);
       terminal.scrollTop = terminal.scrollHeight;
     }, 190 * lines.length + 120);
