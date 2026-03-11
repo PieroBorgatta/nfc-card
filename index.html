@@ -10,27 +10,21 @@
   <meta name="theme-color" content="#071a2d" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
-    /* ══════════════════════════════════════════
-       TOKENS
-    ══════════════════════════════════════════ */
     :root {
       --bg:      #071a2d;
-      --panel:   rgba(7,26,45,0.72);
-      --line:    rgba(64,138,154,0.22);
+      --line:    rgba(64,138,154,0.18);
       --accent:  #408A9A;
       --accent2: #5ed0c0;
       --text:    #f4fbff;
-      --muted:   #b1c6d6;
+      --muted:   #8aafc2;
       --red:     #ff2020;
       --green:   #00ff41;
       --mono:    'Share Tech Mono', ui-monospace, Menlo, Consolas, monospace;
       --sans:    'Inter', ui-sans-serif, system-ui, sans-serif;
       --display: 'Orbitron', sans-serif;
-      --radius:  22px;
-      --shadow:  0 18px 54px rgba(0,0,0,.35);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,7 +33,7 @@
     body {
       font-family: var(--sans);
       color: var(--text);
-      background: linear-gradient(180deg,#03111f 0%,#071a2d 45%,#09182a 100%);
+      background: #050f1c;
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -49,334 +43,344 @@
       content: '';
       position: fixed; inset: 0; z-index: 9999; pointer-events: none;
       background: repeating-linear-gradient(
-        to bottom, transparent 0,transparent 3px,
-        rgba(0,0,0,.15) 3px,rgba(0,0,0,.15) 4px
+        to bottom, transparent 0, transparent 3px,
+        rgba(0,0,0,.13) 3px, rgba(0,0,0,.13) 4px
       );
     }
 
     /* vhs sweep */
     .vhs {
-      position: fixed; left:0; right:0; height:3px; top:0; z-index:9998;
-      background: linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);
-      opacity:.55; animation: vhs 7s ease-in-out infinite;
+      position: fixed; left: 0; right: 0; height: 2px; top: 0; z-index: 9998;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+      opacity: .45; animation: vhs 7s ease-in-out infinite;
     }
     @keyframes vhs {
-      0%   { top:0;     opacity:.55 }
-      50%  { top:100vh; opacity:.18 }
-      100% { top:0;     opacity:.55 }
+      0%   { top: 0;     opacity: .45 }
+      50%  { top: 100vh; opacity: .14 }
+      100% { top: 0;     opacity: .45 }
     }
 
     /* matrix */
     #mx {
-      position:fixed; inset:0; z-index:1;
-      opacity:0; transition:opacity .5s; pointer-events:none;
+      position: fixed; inset: 0; z-index: 1;
+      opacity: 0; transition: opacity .5s; pointer-events: none;
     }
-    #mx.on { opacity:.12; }
+    #mx.on { opacity: .11; }
 
-    /* ══════════════════════════════════════════
+    /* ══════════════════════════════
        PHASE 1 — BOOT
-    ══════════════════════════════════════════ */
+    ══════════════════════════════ */
     #p-boot {
-      position:fixed; inset:0; z-index:100;
-      background:#010a14;
-      display:flex; flex-direction:column; justify-content:center;
-      padding:32px 26px;
-      transition:opacity .5s;
+      position: fixed; inset: 0; z-index: 100;
+      background: #010a14;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 32px 26px;
+      transition: opacity .5s;
     }
-    #p-boot.out { opacity:0; pointer-events:none; }
+    #p-boot.out { opacity: 0; pointer-events: none; }
 
     .boot-label {
-      font-family:var(--display); font-size:10px;
-      color:var(--accent); letter-spacing:4px; text-transform:uppercase;
-      margin-bottom:20px; opacity:.65;
+      font-family: var(--display); font-size: 10px;
+      color: var(--accent); letter-spacing: 4px; text-transform: uppercase;
+      margin-bottom: 20px; opacity: .6;
     }
-
-    #tlines { display:flex; flex-direction:column; gap:3px; }
-
+    #tlines { display: flex; flex-direction: column; gap: 3px; }
     .tl {
-      font-family:var(--mono); font-size:clamp(11px,3vw,13px); line-height:1.75;
-      color:var(--green); opacity:0; animation:show .01s forwards;
+      font-family: var(--mono); font-size: clamp(11px, 3vw, 13px); line-height: 1.75;
+      color: var(--green); opacity: 0; animation: show .01s forwards;
     }
-    .tl.r { color:var(--red); }
-    .tl.c { color:var(--accent2); }
-    .tl.w { color:#fff; }
-    @keyframes show { to { opacity:1; } }
-
+    .tl.r { color: var(--red); }
+    .tl.c { color: var(--accent2); }
+    .tl.w { color: #fff; }
+    @keyframes show { to { opacity: 1; } }
     #caret {
-      display:inline-block; width:9px; height:13px;
-      background:var(--green); vertical-align:middle; margin-left:4px;
-      animation:cur .6s step-end infinite;
+      display: inline-block; width: 9px; height: 13px;
+      background: var(--green); vertical-align: middle; margin-left: 4px;
+      animation: cur .6s step-end infinite;
     }
-    @keyframes cur { 50%{opacity:0} }
+    @keyframes cur { 50% { opacity: 0; } }
 
-    /* ══════════════════════════════════════════
+    /* ══════════════════════════════
        PHASE 2 — SKULL
-    ══════════════════════════════════════════ */
+    ══════════════════════════════ */
     #p-skull {
-      position:fixed; inset:0; z-index:99;
-      background:#010a14;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      opacity:0; pointer-events:none; transition:opacity .3s;
+      position: fixed; inset: 0; z-index: 99;
+      background: #010a14;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
     }
-    #p-skull.on { opacity:1; pointer-events:all; }
+    #p-skull.on { opacity: 1; pointer-events: all; }
 
     .skull {
-      font-family:var(--mono); white-space:pre; line-height:1.25;
-      font-size:clamp(7px,2.4vw,12px);
-      color:var(--red); text-shadow:0 0 10px var(--red),0 0 28px rgba(255,32,32,.3);
-      animation:glitch .17s infinite alternate;
+      font-family: var(--mono); white-space: pre; line-height: 1.25;
+      font-size: clamp(7px, 2.4vw, 12px);
+      color: var(--red); text-shadow: 0 0 10px var(--red), 0 0 28px rgba(255,32,32,.3);
+      animation: glitch .17s infinite alternate;
     }
     .skull-h {
-      font-family:var(--display); font-size:clamp(18px,6vw,40px);
-      color:var(--red); text-shadow:0 0 18px var(--red);
-      margin-top:16px; letter-spacing:2px;
-      animation:glitch .15s infinite alternate;
+      font-family: var(--display); font-size: clamp(18px, 6vw, 40px);
+      color: var(--red); text-shadow: 0 0 18px var(--red);
+      margin-top: 16px; letter-spacing: 2px;
+      animation: glitch .15s infinite alternate;
     }
     .skull-s {
-      font-family:var(--mono); font-size:clamp(10px,3vw,12px);
-      color:var(--accent2); margin-top:8px; letter-spacing:5px;
-      animation:cur .8s step-end infinite;
+      font-family: var(--mono); font-size: clamp(10px, 3vw, 12px);
+      color: var(--accent2); margin-top: 8px; letter-spacing: 5px;
+      animation: cur .8s step-end infinite;
     }
     @keyframes glitch {
-      0%   { transform:translate(0,0) skewX(0deg); }
-      25%  { transform:translate(-2px,1px) skewX(-1.5deg); }
-      50%  { transform:translate(2px,-1px) skewX(2deg); }
-      75%  { transform:translate(-1px,2px) skewX(-1deg); }
-      100% { transform:translate(0,0); }
+      0%   { transform: translate(0,0) skewX(0); }
+      25%  { transform: translate(-2px,1px) skewX(-1.5deg); }
+      50%  { transform: translate(2px,-1px) skewX(2deg); }
+      75%  { transform: translate(-1px,2px) skewX(-1deg); }
+      100% { transform: translate(0,0); }
     }
 
-    /* ══════════════════════════════════════════
+    /* ══════════════════════════════
        PHASE 3 — ALERT
-    ══════════════════════════════════════════ */
+    ══════════════════════════════ */
     #p-alert {
-      position:fixed; inset:0; z-index:200;
-      background:rgba(1,10,20,.93);
-      display:flex; align-items:center; justify-content:center;
-      opacity:0; pointer-events:none; transition:opacity .3s;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(1,10,20,.93);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
     }
-    #p-alert.on { opacity:1; pointer-events:all; }
+    #p-alert.on { opacity: 1; pointer-events: all; }
 
     .abox {
-      background:#010e1c; border:2px solid var(--red); border-radius:20px;
-      padding:32px 24px; max-width:320px; width:90%; text-align:center;
-      box-shadow:0 0 50px rgba(255,32,32,.32),inset 0 0 22px rgba(255,32,32,.05);
-      animation:apop .4s ease 3;
+      background: #010e1c; border: 2px solid var(--red); border-radius: 20px;
+      padding: 32px 24px; max-width: 320px; width: 90%; text-align: center;
+      box-shadow: 0 0 50px rgba(255,32,32,.3), inset 0 0 22px rgba(255,32,32,.04);
+      animation: apop .4s ease 3;
     }
-    @keyframes apop { 0%,100%{transform:scale(1)} 50%{transform:scale(1.03)} }
-
-    .abox-ico  { font-size:44px; margin-bottom:12px; }
-    .abox-h    { font-family:var(--display); font-size:20px; color:var(--red); text-shadow:0 0 10px var(--red); margin-bottom:8px; }
-    .abox-body { font-family:var(--mono); font-size:13px; color:rgba(255,255,255,.68); line-height:1.6; margin-bottom:18px; }
-    .abox-body span { color:var(--red); }
-    .prog      { height:4px; background:rgba(255,32,32,.16); border-radius:4px; overflow:hidden; margin-bottom:18px; }
-    .prog-bar  { height:100%; background:var(--red); box-shadow:0 0 8px var(--red); width:0; animation:fill 3s linear forwards; }
-    @keyframes fill { to { width:100%; } }
+    @keyframes apop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+    .abox-ico  { font-size: 44px; margin-bottom: 12px; }
+    .abox-h    { font-family: var(--display); font-size: 20px; color: var(--red); text-shadow: 0 0 10px var(--red); margin-bottom: 8px; }
+    .abox-body { font-family: var(--mono); font-size: 13px; color: rgba(255,255,255,.65); line-height: 1.6; margin-bottom: 18px; }
+    .abox-body span { color: var(--red); }
+    .prog      { height: 4px; background: rgba(255,32,32,.14); border-radius: 4px; overflow: hidden; margin-bottom: 18px; }
+    .prog-bar  { height: 100%; background: var(--red); box-shadow: 0 0 8px var(--red); width: 0; animation: fill 3s linear forwards; }
+    @keyframes fill { to { width: 100%; } }
     .abox-btn  {
-      background:transparent; border:1px solid var(--accent);
-      color:var(--accent); font-family:var(--mono); font-size:12px;
-      letter-spacing:2px; padding:11px 28px; border-radius:8px; cursor:pointer;
-      transition:background .2s;
+      background: transparent; border: 1px solid var(--accent);
+      color: var(--accent); font-family: var(--mono); font-size: 12px;
+      letter-spacing: 2px; padding: 11px 28px; border-radius: 8px; cursor: pointer;
+      transition: background .2s;
     }
-    .abox-btn:hover, .abox-btn:active { background:rgba(64,138,154,.18); }
+    .abox-btn:hover, .abox-btn:active { background: rgba(64,138,154,.15); }
 
-    /* ══════════════════════════════════════════
-       PHASE 4 — MAIN PAGE  (clean, v2 style)
-    ══════════════════════════════════════════ */
+    /* ══════════════════════════════
+       PHASE 4 — MAIN PAGE
+    ══════════════════════════════ */
     #p-card {
-      position:relative; z-index:2;
-      opacity:0; transform:translateY(28px);
-      transition:opacity .8s,transform .8s;
+      position: relative; z-index: 2;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .9s, transform .9s;
     }
-    #p-card.on { opacity:1; transform:translateY(0); }
+    #p-card.on { opacity: 1; transform: translateY(0); }
 
     .wrap {
-      width:min(100%,720px); margin:0 auto;
-      padding:14px 14px 56px;
+      width: min(100%, 680px);
+      margin: 0 auto;
+      padding: 0 16px 64px;
     }
 
-    /* ── terminal hero ── */
-    .terminal {
-      border:1px solid rgba(94,208,192,.26); border-radius:28px;
-      background:linear-gradient(180deg,rgba(9,23,40,.96),rgba(7,19,33,.9));
-      box-shadow:var(--shadow); overflow:hidden; backdrop-filter:blur(12px);
-    }
-    .t-bar {
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; padding:10px 14px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      background:rgba(255,255,255,.03);
-    }
-    .dots { display:flex; gap:8px; }
-    .dot  { width:12px; height:12px; border-radius:50%; }
-    .dot.dr { background:#ff5f57; }
-    .dot.dy { background:#febc2e; }
-    .dot.dg { background:#28c840; }
-    .t-path { font-family:var(--mono); font-size:11px; color:var(--muted); }
-
-    .t-screen {
-      padding:22px 18px 18px;
-      background:radial-gradient(circle at top right,rgba(64,138,154,.06),transparent 36%);
+    /* ── HERO BANNER ── */
+    .hero-banner {
+      padding: 52px 0 40px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 40px;
     }
 
-    /* wordmark */
-    .wordmark {
-      font-family:var(--display); font-size:clamp(14px,4.5vw,19px);
-      letter-spacing:3px; margin-bottom:18px;
-    }
-    .wm1 { color:#fff; }
-    .wm2 { color:var(--accent2); }
-
-    /* live indicator */
-    .live-row {
-      display:flex; align-items:center; gap:10px; margin-bottom:14px;
-      font-family:var(--mono); font-size:11px;
-      color:var(--accent2); letter-spacing:.16em; text-transform:uppercase;
+    .hero-tag {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--accent2); letter-spacing: .2em; text-transform: uppercase;
+      margin-bottom: 18px;
+      display: flex; align-items: center; gap: 10px;
     }
     .live-dot {
-      width:9px; height:9px; border-radius:50%; background:var(--accent2);
-      animation:glow 2s infinite;
+      width: 8px; height: 8px; border-radius: 50%; background: var(--accent2);
+      animation: glow 2.2s infinite;
+      flex-shrink: 0;
     }
     @keyframes glow {
-      0%,100%{box-shadow:0 0 0 0 rgba(94,208,192,.3)}
-      50%    {box-shadow:0 0 0 10px rgba(94,208,192,0)}
+      0%,100% { box-shadow: 0 0 0 0 rgba(94,208,192,.35); }
+      50%      { box-shadow: 0 0 0 9px rgba(94,208,192,0); }
     }
 
-    .hero-h {
-      font-family:var(--display);
-      font-size:clamp(28px,10vw,64px);
-      line-height:.9; font-weight:900;
-      letter-spacing:-.03em; text-transform:uppercase;
-      margin-bottom:14px; animation:glitch 3s infinite;
+    .hero-title {
+      font-family: var(--display);
+      font-size: clamp(32px, 11vw, 68px);
+      line-height: .88; font-weight: 900;
+      letter-spacing: -.03em; text-transform: uppercase;
+      margin-bottom: 20px;
+      animation: glitch 3.2s infinite;
     }
-    .hero-h .hl { color:var(--accent2); }
+    .hero-title .hl { color: var(--accent2); }
 
-    .hero-sub {
-      color:var(--muted); font-size:clamp(14px,3.8vw,16px);
-      line-height:1.55; max-width:38ch;
+    .hero-intro {
+      font-size: clamp(15px, 4vw, 18px);
+      line-height: 1.6; color: var(--muted);
+      max-width: 42ch;
     }
+    .hero-intro strong { color: var(--text); font-weight: 700; }
 
-    /* codebox */
-    .codebox {
-      margin-top:20px;
-      border:1px solid rgba(94,208,192,.17); border-radius:16px;
-      background:rgba(0,0,0,.26); overflow:hidden;
+    /* wordmark inside hero */
+    .wordmark {
+      font-family: var(--display);
+      font-size: clamp(12px, 3.5vw, 15px);
+      letter-spacing: 3px; margin-bottom: 24px;
+      opacity: .55;
     }
-    .cb-top {
-      display:flex; justify-content:space-between; padding:9px 13px;
-      font-family:var(--mono); font-size:11px; color:var(--muted);
-      letter-spacing:.14em; text-transform:uppercase;
-      border-bottom:1px solid rgba(255,255,255,.05);
-    }
-    .cb-code {
-      padding:14px 13px 16px; min-height:210px;
-      font-family:var(--mono); font-size:12px; line-height:1.65;
-      color:#d9fffb; white-space:pre-wrap; word-break:break-word;
-    }
+    .wm1 { color: #fff; }
+    .wm2 { color: var(--accent2); }
 
-    .done-strip {
-      margin-top:14px; padding:14px 16px;
-      border:1px solid rgba(94,208,192,.18); border-radius:14px;
-      background:linear-gradient(180deg,rgba(64,138,154,.1),rgba(9,18,31,.4));
-    }
-    .done-strip strong {
-      display:block; font-family:var(--mono); font-size:10px;
-      text-transform:uppercase; letter-spacing:.18em;
-      color:var(--accent2); margin-bottom:6px;
-    }
-    .done-strip p { color:var(--text); font-size:14px; line-height:1.55; }
-
-    /* ── content gap ── */
-    .gap { margin-top:14px; }
-
-    /* ── grid ── */
-    .grid2 { display:grid; gap:14px; }
-    @media(min-width:580px){ .grid2 { grid-template-columns:1fr 1fr; } }
-
-    /* ── card ── */
-    .card {
-      border:1px solid var(--line); border-radius:var(--radius);
-      padding:20px 18px;
-      background:linear-gradient(180deg,rgba(13,36,64,.78),rgba(7,26,45,.7));
-      box-shadow:var(--shadow); backdrop-filter:blur(10px);
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: var(--mono); font-size: 10px;
+      color: var(--accent); letter-spacing: .22em; text-transform: uppercase;
+      margin-bottom: 20px; opacity: .75;
     }
 
-    .eyebrow {
-      font-family:var(--mono); font-size:10px;
-      color:var(--accent2); text-transform:uppercase;
-      letter-spacing:.18em; margin-bottom:10px;
+    /* ── SERVICE GRID ── */
+    .svc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 40px;
     }
 
-    h2 {
-      font-size:clamp(18px,4.8vw,22px); font-weight:800;
-      line-height:1.1; margin-bottom:9px;
+    .svc-item {
+      padding: 24px 22px;
+      background: rgba(7,26,45,.55);
+      border-bottom: 1px solid var(--line);
+      transition: background .2s;
+    }
+    .svc-item:last-child { border-bottom: none; }
+    .svc-item:hover { background: rgba(64,138,154,.06); }
+
+    .svc-num {
+      font-family: var(--mono); font-size: 10px;
+      color: var(--accent2); letter-spacing: .14em;
+      margin-bottom: 8px; opacity: .7;
+    }
+    .svc-title {
+      font-size: 16px; font-weight: 700;
+      color: var(--text); margin-bottom: 6px; line-height: 1.3;
+    }
+    .svc-desc {
+      font-size: 13px; color: var(--muted); line-height: 1.58;
     }
 
-    .lead { color:var(--muted); font-size:15px; line-height:1.58; }
-
-    /* chips */
-    .chips { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
-    .chip {
-      padding:8px 12px; border-radius:999px;
-      border:1px solid rgba(94,208,192,.2);
-      background:rgba(64,138,154,.07);
-      color:#dcf8f4; font-size:13px; line-height:1;
+    /* ── CONTACT BLOCK ── */
+    .contact-block {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 40px;
     }
 
-    /* ── contact buttons ── */
-    .actions { display:grid; gap:10px; margin-top:16px; }
-    @media(min-width:460px){ .actions { grid-template-columns:1fr 1fr; } }
+    .contact-header {
+      padding: 22px 22px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(64,138,154,.05);
+    }
+    .contact-header h2 {
+      font-size: clamp(18px, 5vw, 22px); font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .contact-header p {
+      font-size: 14px; color: var(--muted); line-height: 1.5;
+    }
+
+    .contact-rows { display: flex; flex-direction: column; }
+
+    .contact-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none; color: var(--text);
+      transition: background .2s;
+    }
+    .contact-row:last-child { border-bottom: none; }
+    .contact-row:hover, .contact-row:active {
+      background: rgba(94,208,192,.05);
+    }
+
+    .cr-left { display: flex; align-items: center; gap: 14px; }
+    .cr-icon {
+      width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+      display: grid; place-items: center; font-size: 18px;
+      background: rgba(64,138,154,.1);
+      border: 1px solid rgba(64,138,154,.2);
+    }
+    .cr-label {
+      font-family: var(--mono); font-size: 10px;
+      color: var(--accent); letter-spacing: .16em; text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .cr-value { font-size: 15px; font-weight: 600; color: var(--text); }
+
+    .cr-arrow { color: var(--accent2); font-size: 18px; opacity: .6; }
+
+    /* primary contact row */
+    .contact-row.primary {
+      background: rgba(94,208,192,.06);
+    }
+    .contact-row.primary .cr-value { color: var(--accent2); }
+
+    /* ── CLOSING ── */
+    .closing {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 28px 24px;
+      background: rgba(7,26,45,.4);
+      margin-bottom: 48px;
+    }
+    .closing-eyebrow {
+      font-family: var(--mono); font-size: 10px;
+      color: var(--accent2); letter-spacing: .2em; text-transform: uppercase;
+      margin-bottom: 12px; opacity: .7;
+    }
+    .closing h2 { font-size: clamp(17px, 4.5vw, 20px); font-weight: 800; margin-bottom: 10px; }
+    .closing p  { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+
+    .cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
 
     .btn {
-      appearance:none; border:0; text-decoration:none; cursor:pointer;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; padding:15px 16px; border-radius:16px;
-      font-family:var(--sans); font-weight:700;
-      transition:transform .18s,box-shadow .18s;
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; padding: 13px 22px; border-radius: 12px;
+      font-family: var(--sans); font-weight: 700; font-size: 14px;
+      transition: transform .18s, box-shadow .18s;
     }
-    .btn:active { transform:scale(.983); }
-    .btn small { display:block; font-size:11px; opacity:.68; font-weight:600; margin-top:2px; }
-
+    .btn:active { transform: scale(.983); }
     .btn-p {
-      color:#03111f;
-      background:linear-gradient(135deg,var(--accent2),#7be3d5);
-      box-shadow:0 12px 32px rgba(94,208,192,.18);
+      background: linear-gradient(135deg, var(--accent2), #7be3d5);
+      color: #03111f;
+      box-shadow: 0 10px 28px rgba(94,208,192,.18);
     }
     .btn-s {
-      color:var(--text);
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      color: var(--text);
     }
 
-    /* ── service list ── */
-    .svc-list { display:grid; gap:10px; margin-top:14px; }
-
-    .svc {
-      display:grid; grid-template-columns:40px 1fr; gap:14px; align-items:start;
-      padding:14px 12px; border-radius:16px;
-      background:rgba(255,255,255,.025);
-      border:1px solid rgba(255,255,255,.05);
-    }
-    .svc-n {
-      width:40px; height:40px; display:grid; place-items:center; border-radius:12px;
-      background:linear-gradient(135deg,rgba(64,138,154,.26),rgba(22,53,90,.55));
-      color:var(--accent2); font-family:var(--mono); font-size:11px; font-weight:800;
-    }
-    .svc h3 { font-size:15px; font-weight:700; margin-bottom:4px; }
-    .svc p  { color:var(--muted); font-size:13px; line-height:1.52; }
-
-    /* ── footer ── */
+    /* ── FOOTER ── */
     .footer {
-      padding:22px 0 6px; text-align:center;
-      font-family:var(--mono); font-size:11px;
-      color:rgba(255,255,255,.28); letter-spacing:2px;
+      text-align: center;
+      font-family: var(--mono); font-size: 10px;
+      color: rgba(255,255,255,.22); letter-spacing: 2px;
     }
 
     /* ── reveal ── */
-    .rev { opacity:0; transform:translateY(16px); transition:opacity .6s,transform .6s; }
-    .rev.show { opacity:1; transform:translateY(0); }
+    .rev { opacity: 0; transform: translateY(14px); transition: opacity .65s, transform .65s; }
+    .rev.show { opacity: 1; transform: translateY(0); }
 
-    @media(prefers-reduced-motion:reduce){
-      *,*::before,*::after { animation:none!important; transition:none!important; }
+    @media(prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -424,150 +428,131 @@
 <div id="p-card">
   <div class="wrap">
 
-    <!-- terminal hero -->
-    <section class="terminal rev" id="r0">
-      <div class="t-bar">
-        <div class="dots">
-          <span class="dot dr"></span>
-          <span class="dot dy"></span>
-          <span class="dot dg"></span>
-        </div>
-        <span class="t-path">payload://nfc/casklogic/contact.profile</span>
+    <!-- HERO -->
+    <header class="hero-banner rev" id="r0">
+      <div class="wordmark"><span class="wm1">Cask</span><span class="wm2">Logic</span></div>
+      <div class="hero-tag">
+        <span class="live-dot"></span>
+        Accesso non autorizzato rilevato
       </div>
-      <div class="t-screen">
-        <div class="wordmark"><span class="wm1">Cask</span><span class="wm2">Logic</span></div>
+      <h1 class="hero-title">Hai appena<br><span class="hl">attivato</span><br>il contatto.</h1>
+      <p class="hero-intro">
+        Niente panico. Non è un virus. È solo <strong>Piero</strong> —
+        consulenza informatica, AI &amp; automazione, reti, fibra ottica,
+        TVCC, Power BI, software per distillerie e cantine, consulenza doganale.
+      </p>
+    </header>
 
-        <div class="live-row">
-          <span class="live-dot"></span>
-          <span>Accesso non autorizzato rilevato</span>
+    <!-- SERVICES -->
+    <div class="rev" id="r1">
+      <div class="section-label">Cosa faccio</div>
+      <div class="svc-grid">
+        <div class="svc-item">
+          <div class="svc-num">01</div>
+          <div class="svc-title">Consulenza doganale</div>
+          <div class="svc-desc">Accise, tracciabilità, flussi documentali e processi sensibili per realtà che operano in ambito regolamentato.</div>
         </div>
-
-        <h1 class="hero-h">Hai appena<br><span class="hl">attivato</span><br>il contatto.</h1>
-        <p class="hero-sub">
-          Niente panico: non è un virus. È solo <strong>Piero Borgatta</strong> che entra in scena — doganale, AI, reti, automazioni, software che fanno lavorare meglio aziende vere.
-        </p>
-
-        <div class="codebox">
-          <div class="cb-top">
-            <span>live payload</span>
-            <span id="cb-status">inizializzazione…</span>
-          </div>
-          <pre class="cb-code" id="cbcode"></pre>
+        <div class="svc-item">
+          <div class="svc-num">02</div>
+          <div class="svc-title">Software per distillerie e cantine</div>
+          <div class="svc-desc">Strumenti verticali su misura: produzione, registri, controllo operativo, automazioni e gestione dati.</div>
         </div>
-
-        <div class="done-strip">
-          <strong>Payload completato</strong>
-          <p>Operations &amp; IT Manager. Consulenza doganale, software per distillerie e cantine, reti LAN/VLAN, giunzioni fibra, TVCC, Power BI, Power Query, automazione e AI.</p>
+        <div class="svc-item">
+          <div class="svc-num">03</div>
+          <div class="svc-title">Reti LAN / VLAN e infrastruttura</div>
+          <div class="svc-desc">Progettazione e gestione di reti complesse, firewalling, server, virtualizzazione e troubleshooting.</div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-num">04</div>
+          <div class="svc-title">Giunzioni fibra ottica</div>
+          <div class="svc-desc">Posa, saldatura e collaudo di infrastrutture in fibra per ambienti residenziali, industriali e aziendali.</div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-num">05</div>
+          <div class="svc-title">TVCC e videosorveglianza</div>
+          <div class="svc-desc">Sistemi IP complessi fino a 140+ telecamere, monitoraggio e gestione con Dahua e software dedicati.</div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-num">06</div>
+          <div class="svc-title">Power BI e Power Query</div>
+          <div class="svc-desc">Reportistica avanzata, trasformazioni dati e dashboard operative per decisioni informate e veloci.</div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-num">07</div>
+          <div class="svc-title">AI e automazione</div>
+          <div class="svc-desc">Workflow intelligenti con n8n, integrazioni AI, documenti automatizzati e piattaforme su Docker e FastAPI.</div>
+        </div>
+        <div class="svc-item">
+          <div class="svc-num">08</div>
+          <div class="svc-title">Sistemistica e IT management</div>
+          <div class="svc-desc">Windows, Linux, XenServer, VMware, Active Directory, monitoraggio con CheckMk e sicurezza SonicWall.</div>
         </div>
       </div>
-    </section>
-
-    <!-- identity -->
-    <div class="grid2 gap">
-      <article class="card rev" id="r1">
-        <div class="eyebrow">Identità rilevata</div>
-        <h2>Piero Borgatta</h2>
-        <p class="lead">Trasformo caos operativo, infrastrutture fragili e processi manuali in sistemi più puliti, veloci e gestibili.</p>
-        <div class="chips">
-          <span class="chip">Consulenza doganale</span>
-          <span class="chip">Software distillerie</span>
-          <span class="chip">Cantine</span>
-          <span class="chip">AI &amp; automazione</span>
-          <span class="chip">Reti LAN / VLAN</span>
-          <span class="chip">Giunzioni fibra</span>
-          <span class="chip">TVCC</span>
-          <span class="chip">Power BI</span>
-          <span class="chip">Power Query</span>
-        </div>
-      </article>
-
-      <!-- contacts -->
-      <article class="card rev" id="r2">
-        <div class="eyebrow">Canali di contatto</div>
-        <h2>Contattami subito</h2>
-        <p class="lead">Se hai aperto questa pagina col mio biglietto NFC, hai già trovato quello giusto.</p>
-        <div class="actions">
-          <a class="btn btn-p" href="tel:+393780016179">
-            <span>Chiama<small>+39 378 001 6179</small></span><span>→</span>
-          </a>
-          <a class="btn btn-s" href="mailto:info@casklogic.com?subject=Richiesta%20da%20biglietto%20NFC">
-            <span>Email<small>info@casklogic.com</small></span><span>→</span>
-          </a>
-          <a class="btn btn-s" href="https://wa.me/393780016179?text=Ho%20aperto%20il%20tuo%20biglietto%20NFC%20e%20direi%20che%20ha%20funzionato." target="_blank" rel="noopener">
-            <span>WhatsApp<small>Messaggio diretto</small></span><span>→</span>
-          </a>
-          <a class="btn btn-s" href="#servizi">
-            <span>Vedi i servizi<small>Scroll assistito</small></span><span>↓</span>
-          </a>
-        </div>
-      </article>
     </div>
 
-    <!-- services -->
-    <section class="card rev gap" id="r3" style="margin-top:14px">
-      <div class="eyebrow" id="servizi">Servizi caricati</div>
-      <h2>Cosa faccio, in pratica</h2>
-      <p class="lead">Meno teoria da brochure. Più problemi risolti sul serio.</p>
-      <div class="svc-list">
-        <div class="svc">
-          <div class="svc-n">01</div>
-          <div>
-            <h3>Consulenza doganale e compliance</h3>
-            <p>Supporto operativo per accise, tracciabilità, flussi documentali e processi sensibili.</p>
-          </div>
+    <!-- CONTACTS -->
+    <div class="rev" id="r2">
+      <div class="section-label">Contatti</div>
+      <div class="contact-block">
+        <div class="contact-header">
+          <h2>Parliamo</h2>
+          <p>Chiamata diretta, messaggio o mail — scegli tu come iniziare.</p>
         </div>
-        <div class="svc">
-          <div class="svc-n">02</div>
-          <div>
-            <h3>Software per distillerie e cantine</h3>
-            <p>Analisi, sviluppo e automazione di strumenti verticali per produzione, registri e controllo operativo.</p>
-          </div>
-        </div>
-        <div class="svc">
-          <div class="svc-n">03</div>
-          <div>
-            <h3>Sistemistica, reti e infrastruttura</h3>
-            <p>LAN, VLAN, firewalling, server, virtualizzazione, cablaggi e giunzioni in fibra.</p>
-          </div>
-        </div>
-        <div class="svc">
-          <div class="svc-n">04</div>
-          <div>
-            <h3>TVCC e continuità operativa</h3>
-            <p>Videosorveglianza IP, monitoraggio e infrastruttura per ridurre attriti e tempi morti.</p>
-          </div>
-        </div>
-        <div class="svc">
-          <div class="svc-n">05</div>
-          <div>
-            <h3>Power BI, Power Query e dati</h3>
-            <p>Reportistica, dashboard e modelli utili a prendere decisioni senza farsi seppellire da Excel usati male.</p>
-          </div>
-        </div>
-        <div class="svc">
-          <div class="svc-n">06</div>
-          <div>
-            <h3>Automazione e AI</h3>
-            <p>Workflow intelligenti, documenti automatizzati, integrazioni e strumenti pratici per fare di più con meno passaggi manuali.</p>
-          </div>
+        <div class="contact-rows">
+          <a class="contact-row primary" href="tel:+393780016179">
+            <div class="cr-left">
+              <div class="cr-icon">📞</div>
+              <div>
+                <div class="cr-label">Telefono</div>
+                <div class="cr-value">+39 378 001 6179</div>
+              </div>
+            </div>
+            <span class="cr-arrow">›</span>
+          </a>
+          <a class="contact-row" href="https://wa.me/393780016179?text=Ho%20aperto%20il%20tuo%20biglietto%20NFC%20e%20direi%20che%20ha%20funzionato." target="_blank" rel="noopener">
+            <div class="cr-left">
+              <div class="cr-icon">💬</div>
+              <div>
+                <div class="cr-label">WhatsApp</div>
+                <div class="cr-value">Messaggio diretto</div>
+              </div>
+            </div>
+            <span class="cr-arrow">›</span>
+          </a>
+          <a class="contact-row" href="mailto:info@casklogic.com?subject=Contatto%20da%20biglietto%20NFC">
+            <div class="cr-left">
+              <div class="cr-icon">✉️</div>
+              <div>
+                <div class="cr-label">Email</div>
+                <div class="cr-value">info@casklogic.com</div>
+              </div>
+            </div>
+            <span class="cr-arrow">›</span>
+          </a>
+          <a class="contact-row" href="https://casklogic.com" target="_blank" rel="noopener">
+            <div class="cr-left">
+              <div class="cr-icon">🌐</div>
+              <div>
+                <div class="cr-label">Sito web</div>
+                <div class="cr-value">casklogic.com</div>
+              </div>
+            </div>
+            <span class="cr-arrow">›</span>
+          </a>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- closing cta -->
-    <section class="card rev" id="r4" style="margin-top:14px">
-      <div class="eyebrow">Ultimo avviso</div>
-      <h2>Questa pagina non urla a caso</h2>
-      <p class="lead">È volutamente teatrale. Ma il succo è semplice: se ti servono visione operativa, tecnica vera e soluzioni concrete, sai dove trovarmi.</p>
-      <div class="actions" style="margin-top:16px">
-        <a class="btn btn-p" href="mailto:info@casklogic.com?subject=Parliamone">
-          <span>Scrivimi<small>Mail diretta</small></span><span>→</span>
-        </a>
-        <a class="btn btn-s" href="tel:+393780016179">
-          <span>Telefona<small>Risposta rapida</small></span><span>→</span>
-        </a>
+    <!-- CLOSING -->
+    <div class="closing rev" id="r3">
+      <div class="closing-eyebrow">Ultimo avviso</div>
+      <h2>Questa pagina non urla a caso.</h2>
+      <p>È volutamente teatrale. Ma il succo è semplice: se ti servono visione operativa, tecnica vera e soluzioni concrete, sai dove trovarmi.</p>
+      <div class="cta-row">
+        <a class="btn btn-p" href="tel:+393780016179">Chiama ora →</a>
+        <a class="btn btn-s" href="mailto:info@casklogic.com?subject=Parliamone">Scrivi una mail</a>
       </div>
-    </section>
+    </div>
 
     <p class="footer">CaskLogic Solutions · Piero Borgatta · NFC contact payload</p>
   </div>
@@ -591,7 +576,7 @@ window.addEventListener('resize', initMx);
 initMx();
 
 function drawMx() {
-  cx.fillStyle = 'rgba(7,26,45,0.07)';
+  cx.fillStyle = 'rgba(5,15,28,0.08)';
   cx.fillRect(0, 0, cvs.width, cvs.height);
   cx.fillStyle = '#408A9A';
   cx.font = FS + 'px Share Tech Mono';
@@ -632,7 +617,6 @@ async function boot() {
 
   cvs.classList.add('on');
   mat = setInterval(drawMx, 50);
-
   await sleep(280);
   document.getElementById('p-boot').classList.add('out');
 
@@ -650,8 +634,10 @@ async function boot() {
     document.getElementById('p-alert').classList.remove('on');
     reveal();
   };
-  document.getElementById('abtn').addEventListener('click', go, { once:true });
-  setTimeout(() => { if (document.getElementById('p-alert').classList.contains('on')) go(); }, 4400);
+  document.getElementById('abtn').addEventListener('click', go, { once: true });
+  setTimeout(() => {
+    if (document.getElementById('p-alert').classList.contains('on')) go();
+  }, 4400);
 }
 
 function reveal() {
@@ -659,42 +645,12 @@ function reveal() {
   cx.clearRect(0, 0, cvs.width, cvs.height);
   cvs.classList.remove('on');
   document.getElementById('p-card').classList.add('on');
-  ['r0','r1','r2','r3','r4'].forEach((id,i) => {
-    setTimeout(() => { const el=document.getElementById(id); if(el) el.classList.add('show'); }, i*150);
+  ['r0','r1','r2','r3'].forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('show');
+    }, i * 180);
   });
-  typeCode();
-}
-
-/* ── CODEBOX TYPING ── */
-const CODE = [
-  '> boot sequence started...',
-  '> reading nfc token: OK',
-  '> bypassing awkward small talk...',
-  '> loading profile: PIERO_BORGATTA.sys',
-  '> modules: DOGANALE.dll / DISTILLERY.so / WINERY.api',
-  '> modules: VLAN.net / FIBER.splice / TVCC.cam',
-  '> modules: POWERBI.pbix / POWERQUERY.m / AI.agent',
-  '> threat assessment: competent operator detected',
-  '> payload: call or write before your infra does something stupid',
-  '> status: contact acquired ✓',
-];
-
-function typeCode() {
-  const box  = document.getElementById('cbcode');
-  const stat = document.getElementById('cb-status');
-  let li = 0, ci = 0;
-  function tick() {
-    if (li >= CODE.length) { stat.textContent = 'payload attivo'; return; }
-    const line = CODE[li];
-    if (ci < line.length) {
-      box.textContent += line[ci++];
-      setTimeout(tick, 15 + Math.random() * 20);
-    } else {
-      box.textContent += '\n'; li++; ci = 0;
-      setTimeout(tick, 140);
-    }
-  }
-  setTimeout(tick, 500);
 }
 
 boot();
