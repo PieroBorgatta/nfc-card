@@ -622,7 +622,7 @@ const sleep  = ms => new Promise(r => setTimeout(r, ms));
 
 async function boot() {
   for (let i = 0; i < LINES.length; i++) {
-    await sleep(i < 4 ? 165 : i < 8 ? 115 : 85);
+    await sleep(i < 4 ? 620 : i < 8 ? 480 : 380);
     const d = document.createElement('div');
     d.className = 'tl' + (LINES[i].c ? ' ' + LINES[i].c : '');
     d.textContent = LINES[i].t;
