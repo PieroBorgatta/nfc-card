@@ -415,21 +415,7 @@
   <span id="caret"></span>
 </div>
 
-<!-- ════ PHASE 2 – SKULL ════ -->
-<div id="p-skull">
-  <pre class="skull">
-  ░░░░░░░░░░░░░░░░░░░░
-  ░░  ██████████████  ░░
-  ░░ ██  ░░░░  ░░░░██ ░░
-  ░░ ██░░████░░████░░ ░░
-  ░░  █████████████   ░░
-  ░░   ░░██████████   ░░
-  ░░░░░░░░░░░░░░░░░░░░</pre>
-  <div class="skull-h">È VIVO! È VIVO!</div>
-  <div class="skull-s">"LUPO ULULÀ... E CASTELLO ULULÌ"</div>
-</div>
-
-<!-- ════ PHASE 3 – ALERT ════ -->
+<!-- ════ PHASE 2 – ALERT ════ -->
 <div id="p-alert">
   <div class="abox">
     <div class="abox-ico">⚠️</div>
@@ -640,20 +626,19 @@ async function boot() {
 
   cvs.classList.add('on');
   mat = setInterval(drawMx, 50);
-  await sleep(100);
-  document.getElementById('p-boot').classList.add('out');
-  await sleep(600);
-  document.getElementById('p-boot').classList.add('gone');
 
-  // dritto all'alert, no skull
+  // Mostra l'alert SUBITO mentre il boot sta ancora svanendo — nessun vuoto
   document.getElementById('p-alert').classList.add('on');
+  document.getElementById('p-boot').classList.add('out');
+
+  // Rimuove il boot dal DOM solo dopo che è sparito (non visibile comunque)
+  setTimeout(() => document.getElementById('p-boot').classList.add('gone'), 600);
 
   const go = () => {
     document.getElementById('p-alert').classList.remove('on');
     reveal();
   };
-  document.getElementById('abtn').addEventListener('click', go, { once: true });
-  setTimeout(go, 2500); // auto dopo 2.5 secondi
+  setTimeout(go, 2500);
 }
 
 function reveal() {
