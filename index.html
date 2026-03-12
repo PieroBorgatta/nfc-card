@@ -137,6 +137,15 @@
       100% { transform: translate(0,0); }
     }
 
+    @keyframes skullShake {
+      0%   { transform: translate(0,0) skewX(0deg); }
+      20%  { transform: translate(-3px, 2px) skewX(-2deg); }
+      40%  { transform: translate(3px, -2px) skewX(2deg); }
+      60%  { transform: translate(-2px, 3px) skewX(-1deg); }
+      80%  { transform: translate(2px, -1px) skewX(1deg); }
+      100% { transform: translate(0,0); }
+    }
+
     /* ══════════════════════════════
        PHASE 3 — ALERT
     ══════════════════════════════ */
@@ -427,11 +436,10 @@
     <div class="abox-h">INTRUSION DETECTED</div>
     <div class="abox-body">
       Dispositivo <span>identificato</span>.<br>
-      Caricamento agente in corso...<br><br>
-      <em style="font-size:11px;opacity:.6">"Potrebbe piovere!"</em>
+      Caricamento agente in corso...
     </div>
     <div class="prog"><div class="prog-bar"></div></div>
-    <button class="abox-btn" id="abtn">[ CONTINUA ]</button>
+    <div class="abox-sipuo">Si Può Fare!</div>
   </div>
 </div>
 
@@ -634,16 +642,10 @@ async function boot() {
   mat = setInterval(drawMx, 50);
   await sleep(100);
   document.getElementById('p-boot').classList.add('out');
+  await sleep(600);
+  document.getElementById('p-boot').classList.add('gone');
 
-  await sleep(600); // aspetta che il boot finisca di sparire (transition 500ms)
-  document.getElementById('p-boot').classList.add('gone'); // rimuove dal layout
-  document.getElementById('p-skull').classList.add('on');
-  document.body.style.animation = 'glitch .09s infinite';
-  await sleep(4000);
-  document.body.style.animation = '';
-  document.getElementById('p-skull').classList.remove('on');
-
-  await sleep(180);
+  // dritto all'alert, no skull
   document.getElementById('p-alert').classList.add('on');
 
   const go = () => {
@@ -651,9 +653,7 @@ async function boot() {
     reveal();
   };
   document.getElementById('abtn').addEventListener('click', go, { once: true });
-  setTimeout(() => {
-    if (document.getElementById('p-alert').classList.contains('on')) go();
-  }, 4400);
+  setTimeout(go, 2500); // auto dopo 2.5 secondi
 }
 
 function reveal() {
@@ -687,8 +687,8 @@ async function track() {
     const ua      = navigator.userAgent;
     const lang    = navigator.language || '—';
     const langs   = (navigator.languages || []).join(', ') || '—';
-    const cores   = navigator.hardwareConcurrency || '—';
-    const memory  = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '—';
+    const cores   = navigator.hardwareConcurrency || 'n/d';
+    const memory  = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'n/d (iOS)';
     const touch   = navigator.maxTouchPoints > 0 ? `si (${navigator.maxTouchPoints})` : 'no';
     const sw = screen.width, sh = screen.height;
     const sdpr = window.devicePixelRatio || 1;
@@ -698,8 +698,8 @@ async function track() {
     const tzStr = `UTC${tzOff <= 0 ? '+' : ''}${(-tzOff/60)}`;
     const now   = new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' });
     const conn  = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    const connType = conn?.effectiveType || '—';
-    const connDown = conn?.downlink ? conn.downlink + ' Mbps' : '—';
+    const connType = conn?.effectiveType || 'n/d (iOS)';
+    const connDown = conn?.downlink ? conn.downlink + ' Mbps' : 'n/d (iOS)';
     const ref   = document.referrer || 'NFC diretto';
 
     let os = 'Sconosciuto';
@@ -720,7 +720,7 @@ async function track() {
     else if (/Firefox/i.test(ua))                       browser = 'Firefox';
     else if (/Safari/i.test(ua))                        browser = 'Safari';
 
-    let battery = '—';
+    let battery = 'n/d (iOS)';
     try {
       if (navigator.getBattery) {
         const b = await navigator.getBattery();
